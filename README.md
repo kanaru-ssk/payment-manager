@@ -20,5 +20,5 @@
 ## 設計書
 
 - [アーキテクチャー](/docs/architecture.md)
-- [ER 図](/docs/erd.md)
+- [ER 図](/docs/entity_relationship.md)
 - [テーブル定義](/docs/table.md)
