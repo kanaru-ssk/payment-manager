@@ -49,12 +49,9 @@ payment-manager/
     ├── domains/
     │   └── user/
     │       ├── entity.go
-    │       ├── errors.go
-    │       ├── factory.go
-    │       ├── query.go
+    │       ├── error.go
     │       ├── repository.go
     │       ├── service.go
-    │       ├── user.go
     │       └── value_object.go
     ├── infrastructures/
     ├── interfaces/
