@@ -40,7 +40,7 @@ flowchart TB
 payment-manager/
 └── backend/
     ├── cmd/
-    │   └── graphql-server/
+    │   └── grpc-server/
     │       └── main.go
     ├── applications/
     │   └── user.go
