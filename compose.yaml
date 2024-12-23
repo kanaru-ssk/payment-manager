@@ -2,16 +2,27 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+        - action: rebuild
+          path: ./frontend/package.json
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - 8000:8000
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend
 
   db:
     image: postgres:17.2
