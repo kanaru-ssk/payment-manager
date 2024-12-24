@@ -7,19 +7,23 @@ import (
 )
 
 type User struct {
-	UserID    uuid.UUID
+	UserId    uuid.UUID
 	UserName  string
 	Email     Email
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-func NewUser(userID uuid.UUID, userName string, email Email, createdAt, updatedAt time.Time) (User, error) {
+func NewUser(userName string, email Email) User {
+	userId := uuid.New()
+	createdAt := time.Now()
+	updatedAt := time.Now()
+
 	return User{
-		UserID:    userID,
+		UserId:    userId,
 		UserName:  userName,
 		Email:     email,
 		CreatedAt: createdAt,
 		UpdatedAt: updatedAt,
-	}, nil
+	}
 }
