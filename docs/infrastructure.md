@@ -70,7 +70,7 @@ Docker Image を管理する Artifact Registry および、Terraform Backend 用
 
 コードの管理および CI/CD の実行を行う。
 
-- main ブランチへの push で prd デプロイ
+- Publish release で prd デプロイ
 - develop ブランチへの push で dev デプロイ
 - PR 作成・更新で CI 実行
 - feature -> develop -> main の流れでマージする。
