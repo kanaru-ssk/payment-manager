@@ -13,10 +13,11 @@ module "google_project" {
   group           = var.project_name
 }
 
-module "terraform_backend" {
-  source = "../../modules/cloud_storage"
+resource "google_storage_bucket" "terraform_backend" {
+  name          = "terraform-backend-${var.project_name}"
+  location      = var.region
+  project       = local.project_id
+  force_destroy = true
 
-  name       = "terraform-backend-${var.project_name}"
-  location   = var.region
-  project_id = local.project_id
+  uniform_bucket_level_access = true
 }
