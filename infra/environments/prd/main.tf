@@ -1,5 +1,5 @@
 locals {
-  environment = "common"
+  environment = "prd"
 }
 
 module "google_project" {

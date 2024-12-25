@@ -1,5 +1,5 @@
 locals {
-  environment = "common"
+  environment = "dev"
 }
 
 module "google_project" {
