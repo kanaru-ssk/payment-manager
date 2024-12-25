@@ -120,7 +120,6 @@ payment-manager/
     │   ├── dev/
     │   └── prd/
     ├── globals/
-    │   ├── backend.tf
     │   └── common.tfvars
     └── modules/
         └── google_project/
