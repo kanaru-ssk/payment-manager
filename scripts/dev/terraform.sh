@@ -1,4 +1,6 @@
 #!/bin/bash
 
 project_root=$(dirname "$0")/../..
-terraform -chdir=$project_root/infra/environments/$1 $2 -var-file=../../globals/common.tfvars
+env=$1
+shift
+terraform -chdir=$project_root/infra/environments/$env $@ -var-file=../../globals/common.tfvars
