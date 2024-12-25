@@ -10,9 +10,8 @@ payment-manager/
 ├── docs/
 ├── frontend/
 ├── infra/
-├── compose.yaml
-├── Makefile
-└── README.md
+├── scripts/
+└── compose.yaml
 ```
 
 - [`.github`](#github)
@@ -21,6 +20,7 @@ payment-manager/
 - [`docs`](#docs)
 - [`frontend`](#frontend)
 - [`infra`](#infra)
+- [`scripts`](#scripts)
 
 ## .github
 
@@ -42,40 +42,91 @@ payment-manager/
     ├── cmd/
     │   └── grpc-server/
     │       └── main.go
-    ├── applications/
-    │   └── user.go
-    ├── configs/
+    ├── config/
     │   └── config.go
-    ├── domains/
+    ├── domain/
     │   └── user/
     │       ├── entity.go
     │       ├── error.go
     │       ├── repository.go
-    │       ├── service.go
     │       └── value_object.go
-    ├── infrastructures/
-    ├── interfaces/
-    ├── shared/
-    └── tests/
+    ├── infrastructure/
+    ├── interface/
+    ├── lib/
+    ├── usecase/
+    │   └── user/
+    │       └── find_by_user_id.go
+    ├── test/
+    ├── Dockerfile
+    └── go.mod
 ```
-
-- [`applications`](#applications)
-- [`domains`](#domains)
-- [`infrastructures`](#infrastructures)
-- [`interfaces`](#interfaces)
-
-### applications
-
-### domains
-
-### infrastructures
-
-### interfaces
 
 ## db
 
+データベーススキーマとマイグレーション SQL を管理します。
+
+```
+payment-manager/
+└── db/
+    ├── migrations/
+    │   ├── 20241222221600_create_users_table.sql
+    │   └── 20241222224807_create_colors_table.sql
+    └── schema.sql
+```
+
 ## docs
+
+開発用のドキュメントを管理します。
 
 ## frontend
 
+frontend は backend と同様の domain を定義し、他レイヤーに依存しないようにします。
+
+```mermaid
+flowchart TB
+    app --> infrastructure --> domains
+    app --> components --> hooks
+```
+
+```
+payment-manager/
+└── frontend/
+    ├── public/
+    ├── src/
+    │   ├── app/
+    │   ├── components/
+    │   │   └── ui/
+    │   ├── domain/
+    │   │   └── user/
+    │   │       ├── entity.ts
+    │   │       ├── error.ts
+    │   │       └── repository.ts
+    │   ├── hooks/
+    │   ├── infrastructure/
+    │   └── lib/
+    ├── Dockerfile
+    └── package.json
+```
+
 ## infra
+
+インフラを Terraform で管理します。
+
+```
+payment-manager/
+└── infra/
+    ├── environments/
+    │   ├── common/
+    │   ├── dev/
+    │   └── prd/
+    ├── globals/
+    │   ├── backend.tf
+    │   └── versions.tf
+    └── modules/
+        ├── artifact_registry/
+        └── cloud_run_service/
+```
+
+## scripts
+
+開発用のスクリプトを管理します。
