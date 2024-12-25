@@ -5,7 +5,7 @@ import { type User } from "./entity";
  * @param userId - ユーザーID
  * @returns ユーザー情報、またはnull
  */
-export type FindByUserId = (userId: string) => Promise<User | null>;
+export type FindUserByUserId = (userId: string) => Promise<User | null>;
 
 /**
  * 新しいユーザーを作成

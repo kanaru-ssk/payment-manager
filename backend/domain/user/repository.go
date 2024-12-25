@@ -6,7 +6,7 @@ type UserRepository interface {
 	// FindByUserId : 指定されたuserIdに基づいてユーザーを取得
 	// userId: ユーザーID
 	// return: ユーザー情報、またはnil
-	FindByUserId(ctx context.Context, userId string) (*User, error)
+	FindUserByUserId(ctx context.Context, userId string) (*User, error)
 
 	// CreateUser : 新しいユーザーを作成
 	// user: ユーザー情報
