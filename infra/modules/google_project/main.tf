@@ -5,6 +5,6 @@ resource "google_project" "project" {
   labels = {
     environment = var.environment
     managed_by  = "terraform"
-    group       = "payment-manager"
+    group       = var.group
   }
 }
