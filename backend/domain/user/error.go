@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/kanaru-ssk/payment-manager/backend/libs/apperror"
+	"github.com/kanaru-ssk/payment-manager/backend/lib/apperror"
 )
 
 type UserError struct {
