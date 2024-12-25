@@ -1,6 +1,8 @@
 locals {
-  environment = "common"
-  project_id  = "${local.environment}-${var.project_name}"
+  environment        = "common"
+  project_id         = "${local.environment}-${var.project_name}"
+  dev_project_number = 604586293033
+  prd_project_number = 811083787873
 }
 
 module "google_project" {
@@ -39,4 +41,15 @@ resource "google_artifact_registry_repository" "main" {
   docker_config {
     immutable_tags = true
   }
+}
+
+resource "google_artifact_registry_repository_iam_binding" "binding" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.reader"
+  members = [
+    "serviceAccount:service-${local.dev_project_number}@serverless-robot-prod.iam.gserviceaccount.com",
+    "serviceAccount:service-${local.prd_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
+  ]
 }
