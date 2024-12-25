@@ -1,4 +1,4 @@
-# インフラ構成図
+# インフラ構成
 
 ```mermaid
 architecture-beta
@@ -41,19 +41,22 @@ architecture-beta
     developer_to_common_artifact_registry:T --> B:common_artifact_registry
 
     junction artifact_registry_to_cloud_run_fe
-    common_artifact_registry:R --> L:artifact_registry_to_cloud_run_fe
+    common_artifact_registry:R -- L:artifact_registry_to_cloud_run_fe
     artifact_registry_to_cloud_run_fe:T --> B:prd_cloud_run_fe
     artifact_registry_to_cloud_run_fe:B --> T:dev_cloud_run_fe
 
     junction artifact_registry_to_cloud_run_be
-    common_artifact_registry:R --> L:artifact_registry_to_cloud_run_be
+    common_artifact_registry:R -- L:artifact_registry_to_cloud_run_be
     artifact_registry_to_cloud_run_be:T --> B:prd_cloud_run_be
     artifact_registry_to_cloud_run_be:B --> T:dev_cloud_run_be
+
+    service end_user(logos:chrome)[End User]
+    end_user:B --> T:prd_cloud_run_fe
 ```
 
 ## prd, dev
 
-Google Cloud の本番および開発用プロジェクト。
+本番および開発用の Google Cloud プロジェクト。
 
 - Backend は Frontend のサービスアカウントでアクセス可能。常に Next.js のサーバーサイドからリクエストする。
 - Cloud SQL は Backend のサービスアカウントでアクセス可能。
@@ -61,10 +64,12 @@ Google Cloud の本番および開発用プロジェクト。
 
 ## common
 
-Docker Image を管理する Artifact Registry および、Terraform Backend 用の Cloud Storage を用意する Google Cloud プロジェクト。
+本番、開発共通で利用する Google Cloud プロジェクト。
 
-- GitHub Actions 用のサービスアカウントに Artifact Registry 書き込み権限を付与
-- prd,dev の Cloud Run サービスエージェントに Artifact Registry 読み取り権限を付与
+- Terraform Backend 用の Cloud Storage
+- Docker Image を管理する Artifact Registry
+  - GitHub Actions 用のサービスアカウントに Artifact Registry 書き込み権限を付与
+  - prd,dev の Cloud Run サービスエージェントに Artifact Registry 読み取り権限を付与
 
 ## GitHub
 
