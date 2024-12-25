@@ -121,11 +121,28 @@ payment-manager/
     │   └── prd/
     ├── globals/
     │   ├── backend.tf
-    │   └── versions.tf
+    │   └── common.tfvars
     └── modules/
-        ├── artifact_registry/
-        └── cloud_run_service/
+        └── google_project/
+            ├── main.tf
+            └── variables.tf
 ```
+
+### environments
+
+環境ごとの Google Cloud プロジェクトを作成します。
+terraform init, plan, apply コマンドは`infra/environments/{env}`配下で実行します。
+
+### globals
+
+各プロジェクトで共通の設定をここに置きます。
+
+- `backend.tf` : [Terraform Backend](https://developer.hashicorp.com/terraform/language/backend)を指定
+- `common.tfvars` : 共通で使用する変数。`.gitignore`に指定します。
+
+### modules
+
+各環境で共通で利用するリソースを定義します。
 
 ## scripts
 
