@@ -1,9 +1,9 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: payment-manager-backend
+  name: dev-payment-manager-backend
 spec:
   template:
     spec:
       containers:
-        - image: asia-northeast1-docker.pkg.dev/common-payment-manager/main/payment-manager-backend@sha256:f82266f750970ccd8b31b9022dcb4e1466ac02702162f6ef90bee6088d0bd7d5
+        - image: asia-northeast1-docker.pkg.dev/common-payment-manager/main/payment-manager-backend:12260806
