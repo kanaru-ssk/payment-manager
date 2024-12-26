@@ -50,32 +50,37 @@ resource "google_artifact_registry_repository" "main" {
   }
 }
 
-# dev,prd環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
+# dev環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
 # see: https://cloud.google.com/run/docs/deploying?hl=ja#other-projects
-resource "google_artifact_registry_repository_iam_binding" "readers" {
+resource "google_artifact_registry_repository_iam_member" "dev_cloud_run" {
   project    = google_artifact_registry_repository.main.project
   location   = google_artifact_registry_repository.main.location
   repository = google_artifact_registry_repository.main.name
   role       = "roles/artifactregistry.reader"
-  members = [
-    "serviceAccount:service-${local.dev_project_number}@serverless-robot-prod.iam.gserviceaccount.com",
-    "serviceAccount:service-${local.prd_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
-  ]
+  member     = "serviceAccount:service-${local.dev_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
 }
 
-# github-actions用のService Accountを作成
+# prd環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
+resource "google_artifact_registry_repository_iam_member" "prd_cloud_run" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:service-${local.prd_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
+}
+
+# GitHub Actions用のService Accountを作成
 resource "google_service_account" "github_actions" {
   account_id = "github-actions"
 }
 
-resource "google_artifact_registry_repository_iam_binding" "writers" {
+# GitHub ActionsのService AccountにArtifact Registry書き込み権限を付与
+resource "google_artifact_registry_repository_iam_member" "github_actions" {
   project    = google_artifact_registry_repository.main.project
   location   = google_artifact_registry_repository.main.location
   repository = google_artifact_registry_repository.main.name
   role       = "roles/artifactregistry.writer"
-  members = [
-    google_service_account.github_actions.member
-  ]
+  member     = google_service_account.github_actions.member
 }
 
 # Workload Identity Federationで認証するためのIdentity Poolを作成
