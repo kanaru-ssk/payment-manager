@@ -1,4 +1,4 @@
-name: Deploy to dev
+name: Deploy to Cloud Run
 
 on: workflow_dispatch
 
@@ -9,11 +9,10 @@ permissions:
 
 jobs:
   deploy:
-    needs: build-push
-    name: Deploy backend to dev
+    name: Deploy
     uses: ./.github/workflows/deploy-cloud-run.yaml
     with:
-      service_name: dev-payment-manager-backend
+      service_account: github-actions@dev-payment-manager.iam.gserviceaccount.com
       yaml_path: ./backend/.infra/grpc-server/dev.yaml
       image_tag: ${{ github.sha }}
-      service_account: github-actions@dev-payment-manager.iam.gserviceaccount.com
+      service_name: dev-payment-manager-backend
