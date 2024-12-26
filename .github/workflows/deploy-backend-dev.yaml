@@ -4,6 +4,9 @@ on: workflow_dispatch
 
 jobs:
   deploy:
+    permissions:
+      contents: read
+      id-token: write
     name: Deploy backend
     uses: ./.github/workflows/docker-build-push.yaml
     with:
