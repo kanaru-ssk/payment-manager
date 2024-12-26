@@ -50,8 +50,8 @@ module "github_actions_service_account" {
 }
 
 # GitHub ActionsからCloud Runにデプロイするための権限を付与
-resource "google_project_iam_member" "github_actions_cloud_run_admin" {
+resource "google_project_iam_member" "github_actions_cloud_run_developer" {
   project = local.project_id
-  role    = "roles/run.admin"
+  role    = "roles/run.developer"
   member  = "serviceAccount:${module.github_actions_service_account.email}"
 }
