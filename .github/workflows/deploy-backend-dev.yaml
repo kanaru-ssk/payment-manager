@@ -1,0 +1,11 @@
+name: Deploy backend to dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy backend
+    uses: kabu-peace/github-actions/.github/workflows/cloudrun-deploy.yaml@main
+    with:
+      context: ./backend
