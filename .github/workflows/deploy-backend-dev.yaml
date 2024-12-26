@@ -1,0 +1,11 @@
+name: Deploy backend to dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy backend
+    uses: .github/workflows/docker-build-push.yaml
+    with:
+      context: ./backend
