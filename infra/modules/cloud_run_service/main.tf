@@ -1,12 +1,15 @@
+# Cloud Run Service
 resource "google_cloud_run_v2_service" "default" {
-  name     = var.name
   project  = var.project_id
+  name     = var.name
   location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL"
+  ingress  = "INGRESS_TRAFFIC_ALL" # TODO: backendはINGRESS_TRAFFIC_INTERNAL_ONLYにする
 
   template {
     containers {
-      image = "us-docker.pkg.dev/cloudrun/container/hello" # 実際のイメージはGitHub Actionsでデプロイする
+      # リソース作成時はサンプルのイメージで作成
+      # 実際のイメージはGitHub Actionsでデプロイする
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
     }
   }
 
@@ -16,7 +19,7 @@ resource "google_cloud_run_v2_service" "default" {
   }
 }
 
-// 未認証の呼び出しを許可
+# 未認証の呼び出しを許可
 resource "google_cloud_run_service_iam_binding" "default" {
   project  = var.project_id
   location = google_cloud_run_v2_service.default.location

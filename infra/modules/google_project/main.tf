@@ -1,10 +1,12 @@
+# Google Cloud Project
 resource "google_project" "project" {
-  name            = var.name
   project_id      = var.project_id
-  billing_account = var.billing_account
+  name            = var.name
+  billing_account = var.billing_account_id
+
   labels = {
-    environment = var.environment
+    environment = var.environment_label
     managed_by  = "terraform"
-    group       = var.group
+    group       = var.group_label
   }
 }
