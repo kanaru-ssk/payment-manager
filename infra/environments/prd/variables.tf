@@ -1,14 +1,14 @@
 variable "project_name" {
-  description = "project name"
+  description = "Project Name"
   type        = string
 }
 
-variable "billing_account" {
+variable "billing_account_id" {
   type        = string
-  description = "Billing account id"
+  description = "Billing Account ID"
 }
 
 variable "region" {
   type        = string
-  description = "region"
+  description = "Region"
 }

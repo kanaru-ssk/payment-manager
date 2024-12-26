@@ -1,24 +1,24 @@
-variable "name" {
-  type        = string
-  description = "Project name"
-}
-
 variable "project_id" {
   type        = string
-  description = "Project id"
+  description = "Google Cloud Project ID"
 }
 
-variable "billing_account" {
+variable "name" {
   type        = string
-  description = "Billing account id"
+  description = "Google Cloud Project Name"
 }
 
-variable "environment" {
+variable "billing_account_id" {
   type        = string
-  description = "Environment"
+  description = "Billing Account ID"
 }
 
-variable "group" {
+variable "environment_label" {
   type        = string
-  description = "Group"
+  description = "Environment Label"
+}
+
+variable "group_label" {
+  type        = string
+  description = "Group Label"
 }

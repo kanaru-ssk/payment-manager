@@ -5,16 +5,18 @@ locals {
   prd_project_number = 811083787873
 }
 
+# Google Cloud Projectを作成
 module "google_project" {
   source = "../../modules/google_project"
 
-  name            = local.project_id
-  project_id      = local.project_id
-  billing_account = var.billing_account
-  environment     = local.environment
-  group           = var.project_name
+  name               = local.project_id
+  project_id         = local.project_id
+  billing_account_id = var.billing_account_id
+  environment_label  = local.environment
+  group_label        = var.project_name
 }
 
+# 有効化するサービスを指定
 module "project_services" {
   source     = "../../modules/project_services"
   project_id = local.project_id
@@ -23,6 +25,7 @@ module "project_services" {
   ]
 }
 
+# Terraform Backend用のCloud Storage Bucketを作成
 resource "google_storage_bucket" "terraform_backend" {
   name          = "terraform-backend-${var.project_name}"
   location      = var.region
@@ -32,6 +35,8 @@ resource "google_storage_bucket" "terraform_backend" {
   uniform_bucket_level_access = true
 }
 
+# Dockerイメージを管理するArtifact Registryのリポジトリを作成
+# GitHubのmainブランチからBuildしたImageをPushするためのリポジトリ
 resource "google_artifact_registry_repository" "main" {
   repository_id = "main"
   location      = var.region
@@ -43,6 +48,8 @@ resource "google_artifact_registry_repository" "main" {
   }
 }
 
+# dev,prd環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
+# see: https://cloud.google.com/run/docs/deploying?hl=ja#other-projects
 resource "google_artifact_registry_repository_iam_binding" "binding" {
   project    = google_artifact_registry_repository.main.project
   location   = google_artifact_registry_repository.main.location
