@@ -10,7 +10,7 @@ on:
       dockerfile:
         type: string
         description: Dockerfileのパス
-        default: Dockerfile
+        default: {context}/Dockerfile
 
 jobs:
   build:
@@ -44,6 +44,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ inputs.context }}
-          file: Dockerfile
+          file: ${{ inputs.dockerfile }}
           push: true
           tags: asia-northeast1-docker.pkg.dev/common-payment-manager/main/payment-manager-backend:${{ github.sha }}
