@@ -84,6 +84,13 @@ resource "google_artifact_registry_repository_iam_member" "github_actions" {
   member     = google_service_account.github_actions.member
 }
 
+# Workload Identity プールから Google Cloud リソースへの認証を許可
+resource "google_service_account_iam_member" "workload_identity_user" {
+  service_account_id = google_service_account.github_actions.id
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/projects/877995333513/locations/global/workloadIdentityPools/github-actions/attribute.repository/kanaru-ssk/payment-manager"
+}
+
 # Workload Identity Federationで認証するためのIdentity Poolを作成
 # see: https://cloud.google.com/iam/docs/workload-identity-federation?hl=ja
 # see: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool_provider#example-usage---iam-workload-identity-pool-provider-github-actions
