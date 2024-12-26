@@ -14,8 +14,13 @@ jobs:
   build-push:
     strategy:
       matrix:
-        context: ["./backend/", "./frontend"]
+        include:
+          - context: ./backend
+            service_name: payment-manager-backend
+          - context: ./frontend
+            service_name: payment-manager-frontend
     name: Docker build & Push to Artifact Registry
     uses: ./.github/workflows/docker-build-push.yaml
     with:
       context: ${{ matrix.context }}
+      service_name: ${{ matrix.service_name }}
