@@ -1,4 +1,4 @@
-name: Docker build & push
+name: Docker build & Push to Artifact Registry
 
 on:
   workflow_call:
@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  build:
+  build-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

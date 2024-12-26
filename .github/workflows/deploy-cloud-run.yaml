@@ -4,9 +4,9 @@ name: Deploy to Cloud Run
 on:
   workflow_call:
     inputs:
-      service_name:
+      service_account:
         type: string
-        description: Cloud Runのサービス名
+        description: Cloud Run にデプロイするためのサービスアカウント
         required: true
       yaml_path:
         type: string
@@ -15,6 +15,10 @@ on:
       image_tag:
         type: string
         description: デプロイするイメージタグ
+        required: true
+      service_name:
+        type: string
+        description: Cloud Runのサービス名
         required: true
 
 jobs:
@@ -31,7 +35,7 @@ jobs:
         with:
           token_format: access_token
           workload_identity_provider: projects/877995333513/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          service_account: github-actions@common-payment-manager.iam.gserviceaccount.com
+          service_account: ${{ inputs.service_account }}
 
       # yaml 内のイメージタグを書き換える
       - name: Replace image tag
