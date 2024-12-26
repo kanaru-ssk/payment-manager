@@ -12,7 +12,10 @@ permissions:
 
 jobs:
   build-push:
-    name: Build backend
+    strategy:
+      matrix:
+        context: ["./backend/", "./frontend"]
+    name: Docker build & Push to Artifact Registry
     uses: ./.github/workflows/docker-build-push.yaml
     with:
-      context: ./backend
+      context: ${{ matrix.context }}
