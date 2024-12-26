@@ -31,3 +31,12 @@ module "backend" {
   project_id = local.project_id
   region     = var.region
 }
+
+# frontend用のCloud Run Serviceを作成
+module "frontend" {
+  source = "../../modules/cloud_run_service"
+
+  name       = "${local.project_id}-frontend"
+  project_id = local.project_id
+  region     = var.region
+}
