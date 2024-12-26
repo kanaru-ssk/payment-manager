@@ -26,7 +26,8 @@ module "project_services" {
   source = "../../modules/project_services"
 
   services = [
-    "artifactregistry.googleapis.com"
+    "artifactregistry.googleapis.com",
+    "iamcredentials.googleapis.com"
   ]
 }
 
@@ -81,6 +82,13 @@ resource "google_artifact_registry_repository_iam_member" "github_actions" {
   repository = google_artifact_registry_repository.main.name
   role       = "roles/artifactregistry.writer"
   member     = google_service_account.github_actions.member
+}
+
+# Workload Identity プールから Google Cloud リソースへの認証を許可
+resource "google_service_account_iam_member" "workload_identity_user" {
+  service_account_id = google_service_account.github_actions.id
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/projects/877995333513/locations/global/workloadIdentityPools/github-actions/attribute.repository/kanaru-ssk/payment-manager"
 }
 
 # Workload Identity Federationで認証するためのIdentity Poolを作成
