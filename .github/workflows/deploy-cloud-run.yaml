@@ -47,7 +47,4 @@ jobs:
 
       # イメージを Cloud Run にデプロイする
       - name: Deploy
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: ${{ inputs.service_name }}
-          metadata: service.yaml
+        run: gcloud run services replace service.yaml --region asia-northeast1
