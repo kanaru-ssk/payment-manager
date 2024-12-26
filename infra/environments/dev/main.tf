@@ -28,3 +28,11 @@ module "backend" {
   project_id = local.project_id
   region     = var.region
 }
+
+module "frontend" {
+  source = "../../modules/cloud_run_service"
+
+  name       = "${local.project_id}-frontend"
+  project_id = local.project_id
+  region     = var.region
+}
