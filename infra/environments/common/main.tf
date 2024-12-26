@@ -52,7 +52,7 @@ resource "google_artifact_registry_repository" "main" {
 
 # dev,prd環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
 # see: https://cloud.google.com/run/docs/deploying?hl=ja#other-projects
-resource "google_artifact_registry_repository_iam_binding" "binding" {
+resource "google_artifact_registry_repository_iam_binding" "readers" {
   project    = google_artifact_registry_repository.main.project
   location   = google_artifact_registry_repository.main.location
   repository = google_artifact_registry_repository.main.name
@@ -66,6 +66,16 @@ resource "google_artifact_registry_repository_iam_binding" "binding" {
 # github-actions用のService Accountを作成
 resource "google_service_account" "github_actions" {
   account_id = "github-actions"
+}
+
+resource "google_artifact_registry_repository_iam_binding" "writers" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.writer"
+  members = [
+    google_service_account.github_actions.member
+  ]
 }
 
 # Workload Identity Federationで認証するためのIdentity Poolを作成
