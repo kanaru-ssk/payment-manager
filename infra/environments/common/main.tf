@@ -16,10 +16,15 @@ module "google_project" {
   group_label        = var.project_name
 }
 
+provider "google" {
+  project = local.project_id
+  region  = var.region
+}
+
 # 有効化するサービスを指定
 module "project_services" {
-  source     = "../../modules/project_services"
-  project_id = local.project_id
+  source = "../../modules/project_services"
+
   services = [
     "artifactregistry.googleapis.com"
   ]
@@ -29,7 +34,6 @@ module "project_services" {
 resource "google_storage_bucket" "terraform_backend" {
   name          = "terraform-backend-${var.project_name}"
   location      = var.region
-  project       = local.project_id
   force_destroy = true
 
   uniform_bucket_level_access = true
@@ -39,8 +43,6 @@ resource "google_storage_bucket" "terraform_backend" {
 # GitHubのmainブランチからBuildしたImageをPushするためのリポジトリ
 resource "google_artifact_registry_repository" "main" {
   repository_id = "main"
-  location      = var.region
-  project       = local.project_id
   format        = "DOCKER"
 
   docker_config {

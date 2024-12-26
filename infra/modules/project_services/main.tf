@@ -2,7 +2,5 @@
 # gcloud services enable ***.googleapis.com に対応する設定
 resource "google_project_service" "services" {
   for_each = toset(var.services)
-
-  project = var.project_id
-  service = each.value
+  service  = each.value
 }
