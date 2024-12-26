@@ -26,7 +26,8 @@ module "project_services" {
   source = "../../modules/project_services"
 
   services = [
-    "artifactregistry.googleapis.com"
+    "artifactregistry.googleapis.com",
+    "iamcredentials.googleapis.com"
   ]
 }
 
