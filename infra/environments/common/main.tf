@@ -16,10 +16,15 @@ module "google_project" {
   group_label        = var.project_name
 }
 
+provider "google" {
+  project = local.project_id
+  region  = var.region
+}
+
 # 有効化するサービスを指定
 module "project_services" {
-  source     = "../../modules/project_services"
-  project_id = local.project_id
+  source = "../../modules/project_services"
+
   services = [
     "artifactregistry.googleapis.com"
   ]
@@ -29,7 +34,6 @@ module "project_services" {
 resource "google_storage_bucket" "terraform_backend" {
   name          = "terraform-backend-${var.project_name}"
   location      = var.region
-  project       = local.project_id
   force_destroy = true
 
   uniform_bucket_level_access = true
@@ -39,8 +43,6 @@ resource "google_storage_bucket" "terraform_backend" {
 # GitHubのmainブランチからBuildしたImageをPushするためのリポジトリ
 resource "google_artifact_registry_repository" "main" {
   repository_id = "main"
-  location      = var.region
-  project       = local.project_id
   format        = "DOCKER"
 
   docker_config {
@@ -50,7 +52,7 @@ resource "google_artifact_registry_repository" "main" {
 
 # dev,prd環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
 # see: https://cloud.google.com/run/docs/deploying?hl=ja#other-projects
-resource "google_artifact_registry_repository_iam_binding" "binding" {
+resource "google_artifact_registry_repository_iam_binding" "readers" {
   project    = google_artifact_registry_repository.main.project
   location   = google_artifact_registry_repository.main.location
   repository = google_artifact_registry_repository.main.name
@@ -59,4 +61,45 @@ resource "google_artifact_registry_repository_iam_binding" "binding" {
     "serviceAccount:service-${local.dev_project_number}@serverless-robot-prod.iam.gserviceaccount.com",
     "serviceAccount:service-${local.prd_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
   ]
+}
+
+# github-actions用のService Accountを作成
+resource "google_service_account" "github_actions" {
+  account_id = "github-actions"
+}
+
+resource "google_artifact_registry_repository_iam_binding" "writers" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.writer"
+  members = [
+    google_service_account.github_actions.member
+  ]
+}
+
+# Workload Identity Federationで認証するためのIdentity Poolを作成
+# see: https://cloud.google.com/iam/docs/workload-identity-federation?hl=ja
+# see: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool_provider#example-usage---iam-workload-identity-pool-provider-github-actions
+resource "google_iam_workload_identity_pool" "github_actions" {
+  workload_identity_pool_id = "github-actions"
+}
+
+# Workload Identity Federationで認証するためのIdentity Pool Providerを作成
+resource "google_iam_workload_identity_pool_provider" "github_actions" {
+  workload_identity_pool_id          = google_iam_workload_identity_pool.github_actions.workload_identity_pool_id
+  workload_identity_pool_provider_id = "github-actions"
+  attribute_condition                = "attribute.repository == 'kanaru-ssk/payment-manager'"
+
+  attribute_mapping = {
+    "google.subject"        = "assertion.sub"
+    "attribute.actor"       = "assertion.actor"
+    "attribute.aud"         = "assertion.aud"
+    "attribute.repository"  = "assertion.repository"
+    "attribute.environment" = "assertion.environment"
+  }
+
+  oidc {
+    issuer_uri = "https://token.actions.githubusercontent.com"
+  }
 }

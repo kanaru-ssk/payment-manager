@@ -14,10 +14,15 @@ module "google_project" {
   group_label        = var.project_name
 }
 
+provider "google" {
+  project = local.project_id
+  region  = var.region
+}
+
 # 有効化するサービスを指定
 module "project_services" {
-  source     = "../../modules/project_services"
-  project_id = local.project_id
+  source = "../../modules/project_services"
+
   services = [
     "run.googleapis.com"
   ]
@@ -27,16 +32,14 @@ module "project_services" {
 module "backend" {
   source = "../../modules/cloud_run_service"
 
-  name       = "${local.project_id}-backend"
-  project_id = local.project_id
-  region     = var.region
+  name   = "${local.project_id}-backend"
+  region = var.region
 }
 
 # frontend用のCloud Run Serviceを作成
 module "frontend" {
   source = "../../modules/cloud_run_service"
 
-  name       = "${local.project_id}-frontend"
-  project_id = local.project_id
-  region     = var.region
+  name   = "${local.project_id}-frontend"
+  region = var.region
 }
