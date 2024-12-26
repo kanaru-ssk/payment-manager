@@ -62,3 +62,34 @@ resource "google_artifact_registry_repository_iam_binding" "binding" {
     "serviceAccount:service-${local.prd_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
   ]
 }
+
+# github-actions用のService Accountを作成
+resource "google_service_account" "github_actions" {
+  account_id = "github-actions"
+}
+
+# Workload Identity Federationで認証するためのIdentity Poolを作成
+# see: https://cloud.google.com/iam/docs/workload-identity-federation?hl=ja
+# see: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool_provider#example-usage---iam-workload-identity-pool-provider-github-actions
+resource "google_iam_workload_identity_pool" "github_actions" {
+  workload_identity_pool_id = "github-actions"
+}
+
+# Workload Identity Federationで認証するためのIdentity Pool Providerを作成
+resource "google_iam_workload_identity_pool_provider" "github_actions" {
+  workload_identity_pool_id          = google_iam_workload_identity_pool.github_actions.workload_identity_pool_id
+  workload_identity_pool_provider_id = "github-actions"
+  attribute_condition                = "attribute.repository == 'kanaru-ssk/payment-manager'"
+
+  attribute_mapping = {
+    "google.subject"        = "assertion.sub"
+    "attribute.actor"       = "assertion.actor"
+    "attribute.aud"         = "assertion.aud"
+    "attribute.repository"  = "assertion.repository"
+    "attribute.environment" = "assertion.environment"
+  }
+
+  oidc {
+    issuer_uri = "https://token.actions.githubusercontent.com"
+  }
+}
