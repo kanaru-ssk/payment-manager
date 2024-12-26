@@ -16,10 +16,6 @@ on:
         type: string
         description: デプロイするイメージタグ
         required: true
-      service_name:
-        type: string
-        description: Cloud Runのサービス名
-        required: true
 
 jobs:
   deploy:
