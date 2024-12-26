@@ -1,27 +1,13 @@
-name: Deploy backend to dev
+name: Deploy to dev
 
 on: workflow_dispatch
 
+# Google Cloud と OIDC 連携するために id-token: write 権限が必要
 permissions:
   contents: read
   id-token: write
 
-# 連続実行時に既に実行中のジョブを停止する
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  build-push:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-build
-      cancel-in-progress: true
-
-    name: Build backend
-    uses: ./.github/workflows/docker-build-push.yaml
-    with:
-      context: ./backend
-
   deploy:
     needs: build-push
     name: Deploy backend to dev
@@ -30,3 +16,4 @@ jobs:
       service_name: dev-payment-manager-backend
       yaml_path: ./backend/.infra/grpc-server/dev.yaml
       image_tag: ${{ github.sha }}
+      service_account: github-actions@dev-payment-manager.iam.gserviceaccount.com
