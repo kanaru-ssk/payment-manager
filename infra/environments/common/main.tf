@@ -51,68 +51,33 @@ resource "google_artifact_registry_repository" "main" {
   }
 }
 
-# dev環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
+# GitHub ActionsのService Accountを作成
+module "github_actions_service_account" {
+  source = "../../modules/github_actions_service_account"
+}
+
+# GitHub ActionsのService AccountにArtifact Registry書き込み権限を付与
+resource "google_artifact_registry_repository_iam_member" "github_actions_writer" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${module.github_actions_service_account.email}"
+}
+
+# dev,prd環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
 # see: https://cloud.google.com/run/docs/deploying?hl=ja#other-projects
-resource "google_artifact_registry_repository_iam_member" "dev_cloud_run" {
+resource "google_artifact_registry_repository_iam_member" "dev_cloud_run_reader" {
   project    = google_artifact_registry_repository.main.project
   location   = google_artifact_registry_repository.main.location
   repository = google_artifact_registry_repository.main.name
   role       = "roles/artifactregistry.reader"
   member     = "serviceAccount:service-${local.dev_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
 }
-
-# prd環境のCloud Run Service AgentにArtifact Registry読み取り権限を付与
-resource "google_artifact_registry_repository_iam_member" "prd_cloud_run" {
+resource "google_artifact_registry_repository_iam_member" "prd_cloud_run_reader" {
   project    = google_artifact_registry_repository.main.project
   location   = google_artifact_registry_repository.main.location
   repository = google_artifact_registry_repository.main.name
   role       = "roles/artifactregistry.reader"
   member     = "serviceAccount:service-${local.prd_project_number}@serverless-robot-prod.iam.gserviceaccount.com"
-}
-
-# GitHub Actions用のService Accountを作成
-resource "google_service_account" "github_actions" {
-  account_id = "github-actions"
-}
-
-# GitHub ActionsのService AccountにArtifact Registry書き込み権限を付与
-resource "google_artifact_registry_repository_iam_member" "github_actions" {
-  project    = google_artifact_registry_repository.main.project
-  location   = google_artifact_registry_repository.main.location
-  repository = google_artifact_registry_repository.main.name
-  role       = "roles/artifactregistry.writer"
-  member     = google_service_account.github_actions.member
-}
-
-# Workload Identity プールから Google Cloud リソースへの認証を許可
-resource "google_service_account_iam_member" "workload_identity_user" {
-  service_account_id = google_service_account.github_actions.id
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/projects/877995333513/locations/global/workloadIdentityPools/github-actions/attribute.repository/kanaru-ssk/payment-manager"
-}
-
-# Workload Identity Federationで認証するためのIdentity Poolを作成
-# see: https://cloud.google.com/iam/docs/workload-identity-federation?hl=ja
-# see: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iam_workload_identity_pool_provider#example-usage---iam-workload-identity-pool-provider-github-actions
-resource "google_iam_workload_identity_pool" "github_actions" {
-  workload_identity_pool_id = "github-actions"
-}
-
-# Workload Identity Federationで認証するためのIdentity Pool Providerを作成
-resource "google_iam_workload_identity_pool_provider" "github_actions" {
-  workload_identity_pool_id          = google_iam_workload_identity_pool.github_actions.workload_identity_pool_id
-  workload_identity_pool_provider_id = "github-actions"
-  attribute_condition                = "attribute.repository == 'kanaru-ssk/payment-manager'"
-
-  attribute_mapping = {
-    "google.subject"        = "assertion.sub"
-    "attribute.actor"       = "assertion.actor"
-    "attribute.aud"         = "assertion.aud"
-    "attribute.repository"  = "assertion.repository"
-    "attribute.environment" = "assertion.environment"
-  }
-
-  oidc {
-    issuer_uri = "https://token.actions.githubusercontent.com"
-  }
 }
