@@ -36,12 +36,26 @@ jobs:
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
 
+      # すでにimageが存在する場合は完了
+      - name: Check Image exists
+        id: check
+        run: |
+          if gcloud artifacts docker tags list asia-northeast1-docker.pkg.dev/common-payment-manager/main/${{ inputs.service_name }} --filter="tag:=${{ github.sha }}" --format="value(tag)" | grep -q ${{ github.sha }}; then
+            echo "Tag already exists."
+            echo "already_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag does not exists."
+            echo "already_exists=false" >> $GITHUB_OUTPUT
+          fi
+
       # docker buildxを有効化
       - name: Set up Docker Buildx
+        if: steps.check.outputs.already_exists == 'false'
         uses: docker/setup-buildx-action@v3
 
       # Docker イメージをビルド＆プッシュする
       - name: Build and push
+        if: steps.check.outputs.already_exists == 'false'
         uses: docker/build-push-action@v6
         with:
           context: ${{ inputs.context }}

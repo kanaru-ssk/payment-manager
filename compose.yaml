@@ -4,21 +4,23 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
-      - 3000:3000
+      - 3000:8080
+    environment:
+      PORT: 8080
     develop:
       watch:
         - action: sync
           path: ./frontend
           target: /app
         - action: rebuild
-          path: ./frontend/package.json
+          path: ./frontend/package-lock.json
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - 8000:8080
     environment:
       PORT: 8080
     develop:
