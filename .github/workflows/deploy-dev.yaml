@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-push-deploy:
-    name: Docker build & Push to Artifact Registry
+    name: Docker build & Push to Artifact Registry & Deploy to Cloud Run
     strategy:
       matrix:
         include:

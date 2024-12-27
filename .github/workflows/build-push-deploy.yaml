@@ -1,7 +1,7 @@
-name: Deploy dev
+name: Docker build & Push to Artifact Registry & Deploy to Cloud Run
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       context:
         type: string
