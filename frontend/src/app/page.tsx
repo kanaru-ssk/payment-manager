@@ -1,3 +1,9 @@
 export default async function Home() {
-  return <div className="p-5">Hello, World!</div>;
+  if (process.env.BACKEND_URL === undefined) return null;
+
+  // backendと疎通するサンプル
+  const response = await fetch(process.env.BACKEND_URL);
+  const text = (await response.text()).toString();
+
+  return <div className="p-5">{text}</div>;
 }
