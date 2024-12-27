@@ -9,8 +9,8 @@ permissions:
 
 jobs:
   # DockerイメージをビルドしてArtifact RegistryにPush
-  build-push:
-    name: Docker build & Push to Artifact Registry
+  build-push-deploy:
+    name: Docker build & Push to Artifact Registry & Deploy to Cloud Run
     strategy:
       matrix:
         include:
@@ -20,26 +20,15 @@ jobs:
           - context: ./frontend
             service_name: payment-manager-frontend
             yaml_path: ./frontend/.infra/dev.yaml
-    uses: ./.github/workflows/docker-build-push.yaml
-    with:
-      context: ${{ matrix.context }}
-      service_name: ${{ matrix.service_name }}
-
-  # Cloud Runにデプロイ
-  deploy:
-    name: Deploy to Cloud Run
-    needs: build-push
-    strategy:
-      matrix:
-        include:
-          - context: ./backend
-            service_name: payment-manager-backend
-            yaml_path: ./backend/.infra/grpc-server/dev.yaml
-          - context: ./frontend
-            service_name: payment-manager-frontend
-            yaml_path: ./frontend/.infra/dev.yaml
-    uses: ./.github/workflows/deploy-cloud-run.yaml
-    with:
-      service_account: github-actions@dev-payment-manager.iam.gserviceaccount.com
-      yaml_path: ${{ matrix.yaml_path }}
-      image_tag: ${{ github.sha }}
+    steps:
+      - name: Docker build & Push to Artifact Registry
+        uses: ./.github/workflows/docker-build-push.yaml
+        with:
+          context: ${{ matrix.context }}
+          service_name: ${{ matrix.service_name }}
+      - name: Deploy to Cloud Run
+        uses: ./.github/workflows/deploy-cloud-run.yaml
+        with:
+          service_account: github-actions@dev-payment-manager.iam.gserviceaccount.com
+          yaml_path: ${{ matrix.yaml_path }}
+          image_tag: ${{ github.sha }}
