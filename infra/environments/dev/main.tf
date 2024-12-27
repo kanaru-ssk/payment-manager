@@ -55,3 +55,8 @@ resource "google_project_iam_member" "github_actions_cloud_run_developer" {
   role    = "roles/run.developer"
   member  = "serviceAccount:${module.github_actions_service_account.email}"
 }
+resource "google_service_account_iam_member" "service_account_act_as" {
+  service_account_id = "projects/${local.project_id}/serviceAccounts/${module.google_project.project_number}-compute@developer.gserviceaccount.com"
+  member             = "serviceAccount:${module.github_actions_service_account.email}"
+  role               = "roles/iam.serviceAccountUser"
+}
