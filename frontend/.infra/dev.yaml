@@ -7,5 +7,3 @@ spec:
     spec:
       containers:
         - image: asia-northeast1-docker.pkg.dev/common-payment-manager/main/payment-manager-frontend:${IMAGE_TAG}
-          ports:
-            - containerPort: 3000
