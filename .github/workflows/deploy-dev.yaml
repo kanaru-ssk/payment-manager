@@ -10,7 +10,7 @@ permissions:
 jobs:
   # DockerイメージをビルドしてArtifact RegistryにPush
   build-push-deploy:
-    name: Docker build & Push to Artifact Registry & Deploy to Cloud Run
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
