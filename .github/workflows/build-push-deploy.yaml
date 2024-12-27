@@ -82,6 +82,7 @@ jobs:
 
   # イメージを Cloud Run にデプロイ
   deploy:
+    needs: build-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
