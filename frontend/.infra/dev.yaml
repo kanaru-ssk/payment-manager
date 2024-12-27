@@ -9,4 +9,4 @@ spec:
         - image: asia-northeast1-docker.pkg.dev/common-payment-manager/main/payment-manager-frontend:${IMAGE_TAG}
           env:
             - name: BACKEND_URL
-              value: https://dev-payment-manager-backend-604586293033.asia-northeast1.run.app
+              value: "https://dev-payment-manager-backend-604586293033.asia-northeast1.run.app"
