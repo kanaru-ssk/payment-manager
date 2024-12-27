@@ -40,7 +40,7 @@ jobs:
       - name: Check Image exists
         id: check
         run: |
-          if gcloud artifacts docker tags list asia-northeast1-docker.pkg.dev/common-payment-manager/main/${{ inputs.service_name }} --filter="tag:=${{ github.sha }}" --format="value(tag)" | grep -q ${{ github.sha }}; then
+          if gcloud artifacts docker tags list asia-northeast1-docker.pkg.dev/common-payment-manager/main/${{ inputs.service_name }} --filter="tag:${{ github.sha }}" --format="value(tag)" | grep -q ${{ github.sha }}; then
             echo "Tag already exists."
             echo "already_exists=true" >> $GITHUB_OUTPUT
           else
