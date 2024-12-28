@@ -7,7 +7,7 @@ export const env = createEnv({
    * Will throw if you access these variables on the client.
    */
   server: {
-    BACKEND_URL: z.string().url(),
+    BACKEND_URL: z.string(),
   },
   /*
    * Environment variables available on the client (and server).

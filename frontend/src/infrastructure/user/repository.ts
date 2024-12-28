@@ -42,7 +42,7 @@ export const findUserByUserId: FindUserByUserId = async (userId) => {
       createdAt: parsed.data.createdAt,
       updatedAt: parsed.data.updatedAt,
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 };
