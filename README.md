@@ -23,3 +23,9 @@
 - [ER 図](/docs/entity_relationship.md)
 - [テーブル定義](/docs/table.md)
 - [ソフトウェアアーキテクチャ](/docs/software_architecture.md)
+
+## ローカル起動方法
+
+```sh
+docker compose up --watch
+```
