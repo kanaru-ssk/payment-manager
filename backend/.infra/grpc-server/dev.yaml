@@ -7,3 +7,5 @@ spec:
     spec:
       containers:
         - image: asia-northeast1-docker.pkg.dev/common-payment-manager/main/payment-manager-backend:${IMAGE_TAG}
+          ports:
+            - name: h2c
