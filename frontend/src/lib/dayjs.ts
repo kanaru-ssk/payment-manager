@@ -1,3 +1,4 @@
+// サーバーサイドで実行するとタイムゾーンがズレるのでクライアントで実行
 "use client";
 
 import dayjs, { extend } from "dayjs";
