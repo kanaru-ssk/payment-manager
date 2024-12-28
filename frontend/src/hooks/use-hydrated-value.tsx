@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
  * @param args `fn`に渡す引数
  * @returns クライアントサイドで実行された`fn`の結果
  */
-export function useHydratedValue<T, Args extends any[]>(
+export function useHydratedValue<T, Args extends unknown[]>(
   fn: (...args: Args) => T,
   ...args: Args
 ) {
   const [state, setState] = useState<T | null>(null);
-  useEffect(() => setState(fn(...args)), []);
+  useEffect(() => setState(fn(...args)), [args, fn]);
   return state;
 }

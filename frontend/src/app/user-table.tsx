@@ -3,7 +3,6 @@
 import { type User } from "@/domain/user/entity";
 import { useHydratedValue } from "@/hooks/use-hydrated-value";
 import { formatDatetime } from "@/lib/dayjs";
-import { toMilliseconds } from "@/lib/timestamp";
 
 export type UserTableProps = {
   user: User;
