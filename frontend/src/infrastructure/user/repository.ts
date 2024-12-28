@@ -6,7 +6,9 @@ import { userSchema } from "@/domain/user/entity";
 
 export const client = new user.v1.UserServiceClient(
   env.BACKEND_URL,
-  credentials.createInsecure()
+  env.NODE_ENV === "production"
+    ? credentials.createSsl()
+    : credentials.createInsecure()
 );
 
 export const findUserByUserId: FindUserByUserId = async (userId) => {
@@ -42,7 +44,8 @@ export const findUserByUserId: FindUserByUserId = async (userId) => {
       createdAt: parsed.data.createdAt,
       updatedAt: parsed.data.updatedAt,
     };
-  } catch {
+  } catch (err) {
+    console.log(err);
     return null;
   }
 };
