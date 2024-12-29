@@ -32,15 +32,15 @@ jobs:
           echo "project_id=prd-payment-manager" >> "$GITHUB_OUTPUT"
           echo "project_number=811083787873" >> "$GITHUB_OUTPUT"
 
-  # backend-build-push:
-  #   needs: project-info
-  #   name: backend Build & Push
-  #   uses: ./.github/workflows/common-build-push.yaml
-  #   with:
-  #     project_id: ${{ needs.project-info.outputs.project_id }}
-  #     project_number: ${{ needs.project-info.outputs.project_number }}
-  #     context: ./backend
-  #     service_name: payment-manager-backend
+  backend-build-push:
+    needs: project-info
+    name: backend Build & Push
+    uses: ./.github/workflows/common-build-push.yaml
+    with:
+      project_id: ${{ needs.project-info.outputs.project_id }}
+      project_number: ${{ needs.project-info.outputs.project_number }}
+      context: ./backend
+      service_name: payment-manager-backend
   # backend-deploy:
   #   needs: [project-info, backend-build-push]
   #   name: backend Deploy
