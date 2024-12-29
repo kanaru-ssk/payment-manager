@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set Project Info dev
-        if: ${{ inputs.env == "dev" }}
+        if: ${{ inputs.env == 'dev' }}
         run: |
           echo "project_id=dev-payment-manager" >> "$GITHUB_OUTPUT"
           echo "project_number=604586293033" >> "$GITHUB_OUTPUT"
       - name: Set Project Number prd
-        if: ${{ inputs.env == "prd" }}
+        if: ${{ inputs.env == 'prd' }}
         run: |
           echo "project_id=prd-payment-manager" >> "$GITHUB_OUTPUT"
           echo "project_number=811083787873" >> "$GITHUB_OUTPUT"
