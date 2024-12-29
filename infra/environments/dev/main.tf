@@ -24,6 +24,7 @@ module "project_services" {
   source = "../../modules/project_services"
 
   services = [
+    "iamcredentials.googleapis.com",
     "artifactregistry.googleapis.com",
     "run.googleapis.com"
   ]
@@ -59,6 +60,8 @@ module "frontend" {
 # GitHub ActionsのService Accountを作成
 module "github_actions_service_account" {
   source = "../../modules/github_actions_service_account"
+
+  project_number = module.google_project.project_number
 }
 
 # GitHub ActionsのService AccountにArtifact Registry読み取り権限を付与

@@ -33,5 +33,5 @@ resource "google_iam_workload_identity_pool_provider" "github_actions" {
 resource "google_service_account_iam_member" "workload_identity_user" {
   service_account_id = google_service_account.github_actions.id
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/projects/877995333513/locations/global/workloadIdentityPools/github-actions/attribute.repository/kanaru-ssk/payment-manager"
+  member             = "principalSet://iam.googleapis.com/projects/${var.project_number}/locations/global/workloadIdentityPools/github-actions/attribute.repository/kanaru-ssk/payment-manager"
 }

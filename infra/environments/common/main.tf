@@ -54,6 +54,8 @@ resource "google_artifact_registry_repository" "main" {
 # GitHub ActionsのService Accountを作成
 module "github_actions_service_account" {
   source = "../../modules/github_actions_service_account"
+
+  project_number = module.google_project.project_number
 }
 
 # GitHub ActionsのService AccountにArtifact Registry読み取り権限を付与
