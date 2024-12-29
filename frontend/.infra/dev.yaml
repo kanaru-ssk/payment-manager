@@ -7,6 +7,3 @@ spec:
     spec:
       containers:
         - image: asia-northeast1-docker.pkg.dev/dev-payment-manager/main/payment-manager-frontend:${IMAGE_TAG}
-          env:
-            - name: BACKEND_URL
-              value: dev-payment-manager-backend-604586293033.asia-northeast1.run.app:443
