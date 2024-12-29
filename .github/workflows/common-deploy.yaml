@@ -1,16 +1,12 @@
-name: Docker build & Push to Artifact Registry & Deploy to Cloud Run
+name: Deploy to Cloud Run
 
 on:
   workflow_call:
     inputs:
       env:
-        type: choice
-        required: true
+        type: string
         description: デプロイ先
-        default: dev
-        options:
-          - dev
-          - prd
+        required: true
       yaml_path:
         type: string
         description: Cloud Runの設定ファイルへのパス

@@ -4,13 +4,9 @@ on:
   workflow_call:
     inputs:
       env:
-        type: choice
-        required: true
+        type: string
         description: デプロイ先
-        default: dev
-        options:
-          - dev
-          - prd
+        required: true
       context:
         type: string
         description: docker buildを実行するディレクトリ
