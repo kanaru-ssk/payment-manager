@@ -52,7 +52,7 @@ jobs:
     with:
       project_id: ${{ needs.project-info.outputs.project_id }}
       project_number: ${{ needs.project-info.outputs.project_number }}
-      yaml_path: ./backend/.infra/grpc-server/dev.yaml
+      yaml_path: ./backend/.infra/grpc-server/${{ inputs.env }}.yaml
       image_tag: ${{ github.sha }}
 
   frontend-build-push:
@@ -72,5 +72,5 @@ jobs:
     with:
       project_id: ${{ needs.project-info.outputs.project_id }}
       project_number: ${{ needs.project-info.outputs.project_number }}
-      yaml_path: ./frontend/.infra/dev.yaml
+      yaml_path: ./frontend/.infra/${{ inputs.env }}.yaml
       image_tag: ${{ github.sha }}
