@@ -61,6 +61,7 @@ module "frontend" {
 module "github_actions_service_account" {
   source = "../../modules/github_actions_service_account"
 
+  project_id     = local.project_id
   project_number = module.google_project.project_number
 }
 
@@ -81,16 +82,4 @@ resource "google_artifact_registry_repository_iam_member" "github_actions_writer
   repository = google_artifact_registry_repository.main.name
   role       = "roles/artifactregistry.writer"
   member     = "serviceAccount:${module.github_actions_service_account.email}"
-}
-
-# GitHub ActionsからCloud Runにデプロイするための権限を付与
-resource "google_project_iam_member" "github_actions_cloud_run_developer" {
-  project = local.project_id
-  role    = "roles/run.developer"
-  member  = "serviceAccount:${module.github_actions_service_account.email}"
-}
-resource "google_service_account_iam_member" "service_account_act_as" {
-  service_account_id = "projects/${local.project_id}/serviceAccounts/${module.google_project.project_number}-compute@developer.gserviceaccount.com"
-  member             = "serviceAccount:${module.github_actions_service_account.email}"
-  role               = "roles/iam.serviceAccountUser"
 }

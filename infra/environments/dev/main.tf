@@ -83,4 +83,3 @@ resource "google_artifact_registry_repository_iam_member" "github_actions_writer
   role       = "roles/artifactregistry.writer"
   member     = "serviceAccount:${module.github_actions_service_account.email}"
 }
-
