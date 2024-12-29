@@ -24,8 +24,21 @@ module "project_services" {
   source = "../../modules/project_services"
 
   services = [
+    "iamcredentials.googleapis.com",
+    "artifactregistry.googleapis.com",
     "run.googleapis.com"
   ]
+}
+
+# Dockerイメージを管理するArtifact Registryのリポジトリを作成
+# GitHubのmainブランチからBuildしたImageをPushするためのリポジトリ
+resource "google_artifact_registry_repository" "main" {
+  repository_id = "main"
+  format        = "DOCKER"
+
+  docker_config {
+    immutable_tags = true
+  }
 }
 
 # backend用のCloud Run Serviceを作成
@@ -42,4 +55,42 @@ module "frontend" {
 
   name   = "${local.project_id}-frontend"
   region = var.region
+}
+
+# GitHub ActionsのService Accountを作成
+module "github_actions_service_account" {
+  source = "../../modules/github_actions_service_account"
+
+  project_number = module.google_project.project_number
+}
+
+# GitHub ActionsのService AccountにArtifact Registry読み取り権限を付与
+# Buildするコミットのイメージが既に存在するか確認するため
+resource "google_artifact_registry_repository_iam_member" "github_actions_reader" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${module.github_actions_service_account.email}"
+}
+# GitHub ActionsのService AccountにArtifact Registry書き込み権限を付与
+# BuildしたImageをPushするため
+resource "google_artifact_registry_repository_iam_member" "github_actions_writer" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${module.github_actions_service_account.email}"
+}
+
+# GitHub ActionsからCloud Runにデプロイするための権限を付与
+resource "google_project_iam_member" "github_actions_cloud_run_developer" {
+  project = local.project_id
+  role    = "roles/run.developer"
+  member  = "serviceAccount:${module.github_actions_service_account.email}"
+}
+resource "google_service_account_iam_member" "service_account_act_as" {
+  service_account_id = "projects/${local.project_id}/serviceAccounts/${module.google_project.project_number}-compute@developer.gserviceaccount.com"
+  member             = "serviceAccount:${module.github_actions_service_account.email}"
+  role               = "roles/iam.serviceAccountUser"
 }
