@@ -20,8 +20,12 @@ permissions:
 jobs:
   project-info:
     runs-on: ubuntu-latest
+    outputs:
+      project_id: ${{ steps.echo.outputs.project_id }}
+      project_number: ${{ steps.echo.outputs.project_number }}
     steps:
       - name: Set Project Info
+        id: echo
         run: |
           if ${{ inputs.env == 'dev' }}; then
             echo "project_id=dev-payment-manager" >> "$GITHUB_OUTPUT"
