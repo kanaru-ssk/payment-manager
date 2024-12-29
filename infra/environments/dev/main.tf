@@ -24,8 +24,20 @@ module "project_services" {
   source = "../../modules/project_services"
 
   services = [
+    "artifactregistry.googleapis.com",
     "run.googleapis.com"
   ]
+}
+
+# Dockerイメージを管理するArtifact Registryのリポジトリを作成
+# GitHubのmainブランチからBuildしたImageをPushするためのリポジトリ
+resource "google_artifact_registry_repository" "main" {
+  repository_id = "main"
+  format        = "DOCKER"
+
+  docker_config {
+    immutable_tags = true
+  }
 }
 
 # backend用のCloud Run Serviceを作成
