@@ -18,30 +18,12 @@ permissions:
   id-token: write
 
 jobs:
-  project-info:
-    runs-on: ubuntu-latest
-    outputs:
-      project_id: ${{ steps.echo.outputs.project_id }}
-      project_number: ${{ steps.echo.outputs.project_number }}
-    steps:
-      - name: Set Project Info
-        id: echo
-        run: |
-          if ${{ inputs.env == 'dev' }}; then
-            echo "project_id=dev-payment-manager" >> "$GITHUB_OUTPUT"
-            echo "project_number=604586293033" >> "$GITHUB_OUTPUT"
-          else
-            echo "project_id=prd-payment-manager" >> "$GITHUB_OUTPUT"
-            echo "project_number=811083787873" >> "$GITHUB_OUTPUT"
-          fi
-
   backend-deploy:
     needs: project-info
     name: backend Deploy
     uses: ./.github/workflows/reusable-deploy.yaml
     with:
-      project_id: ${{ needs.project-info.outputs.project_id }}
-      project_number: ${{ needs.project-info.outputs.project_number }}
+      env: ${{ inputs.env }}
       context: ./backend
       service_name: payment-manager-backend
       yaml_path: ./backend/.infra/grpc-server/${{ inputs.env }}.yaml
@@ -52,8 +34,7 @@ jobs:
     name: frontend Deploy
     uses: ./.github/workflows/reusable-deploy.yaml
     with:
-      project_id: ${{ needs.project-info.outputs.project_id }}
-      project_number: ${{ needs.project-info.outputs.project_number }}
+      env: ${{ inputs.env }}
       context: ./frontend
       service_name: payment-manager-frontend
       yaml_path: ./frontend/.infra/${{ inputs.env }}.yaml

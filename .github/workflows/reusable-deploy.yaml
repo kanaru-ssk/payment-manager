@@ -3,13 +3,9 @@ name: Reusable Deploy
 on:
   workflow_call:
     inputs:
-      project_id:
+      env:
         type: string
-        description: Google Cloud Project ID
-        required: true
-      project_number:
-        type: string
-        description: Google Cloud Project Number
+        description: デプロイ先
         required: true
       context:
         type: string
@@ -35,14 +31,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set Project Info
+        id: project
+        run: |
+          if ${{ inputs.env == 'dev' }}; then
+            echo "project_id=dev-payment-manager" >> "$GITHUB_OUTPUT"
+            echo "project_number=604586293033" >> "$GITHUB_OUTPUT"
+          else
+            echo "project_id=prd-payment-manager" >> "$GITHUB_OUTPUT"
+            echo "project_number=811083787873" >> "$GITHUB_OUTPUT"
+          fi
+
       # Google Cloud との認証情報セットアップ
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          workload_identity_provider: projects/${{ inputs.project_number }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          service_account: github-actions@${{ inputs.project_id }}.iam.gserviceaccount.com
+          workload_identity_provider: projects/${{ steps.project.outputs.project_number }}/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+          service_account: github-actions@${{ steps.project.outputs.project_id }}.iam.gserviceaccount.com
 
       # Artifact Registry へログイン
       - name: Login to Artifact Registry
@@ -56,7 +63,7 @@ jobs:
       - name: Check Image exists
         id: check
         run: |
-          if gcloud artifacts docker tags list asia-northeast1-docker.pkg.dev/${{ inputs.project_id }}/main/${{ inputs.service_name }} --filter="tag:${{ github.sha }}" --format="value(tag)" | grep -q ${{ github.sha }}; then
+          if gcloud artifacts docker tags list asia-northeast1-docker.pkg.dev/${{ steps.project.outputs.project_id }}/main/${{ inputs.service_name }} --filter="tag:${{ github.sha }}" --format="value(tag)" | grep -q ${{ github.sha }}; then
             echo "Tag already exists."
             echo "already_exists=true" >> $GITHUB_OUTPUT
           else
@@ -76,7 +83,7 @@ jobs:
         with:
           context: ${{ inputs.context }}
           push: true
-          tags: asia-northeast1-docker.pkg.dev/${{ inputs.project_id }}/main/${{ inputs.service_name }}:${{ github.sha }}
+          tags: asia-northeast1-docker.pkg.dev/${{ steps.project.outputs.project_id }}/main/${{ inputs.service_name }}:${{ github.sha }}
 
       # yaml 内のイメージタグを書き換える
       - name: Replace Image Tag
