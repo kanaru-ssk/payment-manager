@@ -16,11 +16,6 @@ on:
         description: デプロイするイメージタグ
         required: true
 
-# Google Cloud と OIDC 連携するために id-token: write 権限が必要
-permissions:
-  contents: read
-  id-token: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest

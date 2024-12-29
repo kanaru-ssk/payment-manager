@@ -12,6 +12,11 @@ on:
           - dev
           - prd
 
+# Google Cloud と OIDC 連携するために id-token: write 権限が必要
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   backend-build-push:
     name: backend Build & Push
