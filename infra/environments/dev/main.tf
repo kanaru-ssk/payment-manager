@@ -61,6 +61,25 @@ module "github_actions_service_account" {
   source = "../../modules/github_actions_service_account"
 }
 
+# GitHub ActionsのService AccountにArtifact Registry読み取り権限を付与
+# Buildするコミットのイメージが既に存在するか確認するため
+resource "google_artifact_registry_repository_iam_member" "github_actions_reader" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${module.github_actions_service_account.email}"
+}
+# GitHub ActionsのService AccountにArtifact Registry書き込み権限を付与
+# BuildしたImageをPushするため
+resource "google_artifact_registry_repository_iam_member" "github_actions_writer" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${module.github_actions_service_account.email}"
+}
+
 # GitHub ActionsからCloud Runにデプロイするための権限を付与
 resource "google_project_iam_member" "github_actions_cloud_run_developer" {
   project = local.project_id
