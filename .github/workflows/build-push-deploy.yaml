@@ -44,7 +44,7 @@ jobs:
         with:
           token_format: access_token
           workload_identity_provider: projects/877995333513/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          service_account: github-actions@common-payment-manager.iam.gserviceaccount.com
+          service_account: github-actions@dev-payment-manager.iam.gserviceaccount.com
 
       # Artifact Registry へログイン
       - name: Login to Artifact Registry
