@@ -3,8 +3,9 @@ import { user } from "@/infrastructure/grpc/proto/user/v1/user";
 import { env } from "@/env";
 import { credentials } from "@grpc/grpc-js";
 import { userSchema } from "@/domain/user/entity";
+import { toMilliseconds } from "@/lib/timestamp";
 
-export const client = new user.v1.UserServiceClient(
+const client = new user.v1.UserServiceClient(
   env.BACKEND_URL,
   env.NODE_ENV === "production"
     ? credentials.createSsl()
@@ -25,15 +26,15 @@ export const findUserByUserId: FindUserByUserId = async (userId) => {
         })
     );
 
-    const userObject = response.toObject().user;
     const parsed = userSchema.safeParse({
-      userId: userObject?.user_id,
-      userName: userObject?.user_name,
-      email: userObject?.email,
-      createdAt: new Date(userObject?.created_at?.seconds || ""),
-      updatedAt: new Date(userObject?.updated_at?.seconds || ""),
+      userId: response.user.user_id,
+      userName: response.user.user_name,
+      email: response.user.email,
+      createdAt: new Date(toMilliseconds(response.user.created_at)),
+      updatedAt: new Date(toMilliseconds(response.user.updated_at)),
     });
     if (!parsed.success) {
+      console.log(parsed.error);
       return null;
     }
 

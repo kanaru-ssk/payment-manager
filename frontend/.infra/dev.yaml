@@ -6,4 +6,4 @@ spec:
   template:
     spec:
       containers:
-        - image: asia-northeast1-docker.pkg.dev/common-payment-manager/main/payment-manager-frontend:${IMAGE_TAG}
+        - image: asia-northeast1-docker.pkg.dev/dev-payment-manager/main/payment-manager-frontend:${IMAGE_TAG}

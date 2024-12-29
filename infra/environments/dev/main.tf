@@ -24,8 +24,20 @@ module "project_services" {
   source = "../../modules/project_services"
 
   services = [
+    "artifactregistry.googleapis.com",
     "run.googleapis.com"
   ]
+}
+
+# Dockerイメージを管理するArtifact Registryのリポジトリを作成
+# GitHubのmainブランチからBuildしたImageをPushするためのリポジトリ
+resource "google_artifact_registry_repository" "main" {
+  repository_id = "main"
+  format        = "DOCKER"
+
+  docker_config {
+    immutable_tags = true
+  }
 }
 
 # backend用のCloud Run Serviceを作成
@@ -47,6 +59,25 @@ module "frontend" {
 # GitHub ActionsのService Accountを作成
 module "github_actions_service_account" {
   source = "../../modules/github_actions_service_account"
+}
+
+# GitHub ActionsのService AccountにArtifact Registry読み取り権限を付与
+# Buildするコミットのイメージが既に存在するか確認するため
+resource "google_artifact_registry_repository_iam_member" "github_actions_reader" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${module.github_actions_service_account.email}"
+}
+# GitHub ActionsのService AccountにArtifact Registry書き込み権限を付与
+# BuildしたImageをPushするため
+resource "google_artifact_registry_repository_iam_member" "github_actions_writer" {
+  project    = google_artifact_registry_repository.main.project
+  location   = google_artifact_registry_repository.main.location
+  repository = google_artifact_registry_repository.main.name
+  role       = "roles/artifactregistry.writer"
+  member     = "serviceAccount:${module.github_actions_service_account.email}"
 }
 
 # GitHub ActionsからCloud Runにデプロイするための権限を付与

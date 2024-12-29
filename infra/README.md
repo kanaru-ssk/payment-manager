@@ -1,4 +1,4 @@
-# インフラ
+# infra
 
 インフラは[terraform](https://www.terraform.io)で管理します。
 

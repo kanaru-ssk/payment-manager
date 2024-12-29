@@ -1,22 +1,16 @@
 # データベース
 
-データベースは[PostgreSQL](https://www.postgresql.org)、マイグレーションは[dbmate](https://github.com/amacneil/dbmate)を使用します。
+Payment Manager のデータベースサービス
 
 ※ README 内のコマンドはプロジェクトルートで実行してください。
 
-## データベースのローカル起動
+## 使用技術
 
-```sh
-docker compose up -d db
-```
+- インフラ : [Cloud SQL for PostgreSQL](https://cloud.google.com/sql/postgresql)
+- RDBMS : [PostgreSQL](https://www.postgresql.org)
+- マイグレーション : [dbmage](https://github.com/amacneil/dbmate)
 
-## ローカルのデータベースに接続
-
-```sh
-PGPASSWORD=password docker compose exec db psql -U postgres -d postgres
-```
-
-## dbmate コマンド
+## 開発用コマンド
 
 ```sh
 ./scripts/dev/dbmate.sh help                   # ヘルプを表示
@@ -24,4 +18,7 @@ PGPASSWORD=password docker compose exec db psql -U postgres -d postgres
 ./scripts/dev/dbmate.sh up                     # 最新バージョンにマイグレート
 ./scripts/dev/dbmate.sh down                   # 直近のマイグレーションをロールバック
 ./scripts/dev/dbmate.sh dump                   # db/schema.sqlを更新
+
+# ローカルのデータベースに接続
+PGPASSWORD=password docker compose exec db psql -U postgres -d postgres
 ```
