@@ -35,3 +35,15 @@ resource "google_service_account_iam_member" "workload_identity_user" {
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/projects/${var.project_number}/locations/global/workloadIdentityPools/github-actions/attribute.repository/kanaru-ssk/payment-manager"
 }
+
+# GitHub ActionsからCloud Runにデプロイするための権限を付与
+resource "google_project_iam_member" "github_actions_cloud_run_developer" {
+  project = var.project_id
+  role    = "roles/run.developer"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
+resource "google_service_account_iam_member" "service_account_act_as" {
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${var.project_number}-compute@developer.gserviceaccount.com"
+  member             = "serviceAccount:${google_service_account.github_actions.email}"
+  role               = "roles/iam.serviceAccountUser"
+}
