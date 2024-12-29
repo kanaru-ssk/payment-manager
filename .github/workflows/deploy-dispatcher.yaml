@@ -1,0 +1,46 @@
+name: Deploy Dispatcher
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        required: true
+        description: デプロイ先
+        default: dev
+        options:
+          - dev
+          - prd
+
+jobs:
+  backend-build-push:
+    name: backend Build & Push
+    uses: ./.github/workflows/common-build-push.yaml
+    with:
+      env: ${{ inputs.env }}
+      context: ./backend
+      service_name: payment-manager-backend
+  backend-deploy:
+    needs: backend-build-push
+    name: backend Deploy
+    uses: ./.github/workflows/common-deploy.yaml
+    with:
+      env: ${{ inputs.env }}
+      yaml_path: ./backend/.infra/grpc-server/dev.yaml
+      image_tag: ${{ github.sha }}
+  frontend-build-push:
+    # needs: backend-deploy # SSGする場合はbackendデプロイ後にbuild
+    name: frontend Build & Push
+    uses: ./.github/workflows/common-build-push.yaml
+    with:
+      env: ${{ inputs.env }}
+      context: ./frontend
+      service_name: payment-manager-frontend
+  frontend-deploy:
+    needs: frontend-build-push
+    name: frontend Deploy
+    uses: ./.github/workflows/common-deploy.yaml
+    with:
+      env: ${{ inputs.env }}
+      yaml_path: ./frontend/.infra/dev.yaml
+      image_tag: ${{ github.sha }}
