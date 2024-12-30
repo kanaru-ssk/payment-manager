@@ -8,11 +8,13 @@ CREATE TABLE users (
     updated_at timestamptz DEFAULT current_timestamp NOT NULL, -- 更新日時
     -- 制約
     CONSTRAINT email_check CHECK (
-        email ~ '^[a-zA-Z0-9](\\.?[a-zA-Z0-9_-])*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
+        email ~ '^[a-zA-Z0-9](\.?[a-zA-Z0-9_-])*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     )
 );
+
 CREATE INDEX idx_users_email ON users (email);
 
 -- migrate:down
 DROP INDEX idx_users_email;
+
 DROP TABLE users;

@@ -121,7 +121,7 @@ CREATE TABLE public.users (
     email character varying(256) NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    CONSTRAINT email_check CHECK (((email)::text ~ '^[a-zA-Z0-9](\\.?[a-zA-Z0-9_-])*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'::text))
+    CONSTRAINT email_check CHECK (((email)::text ~ '^[a-zA-Z0-9](\.?[a-zA-Z0-9_-])*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'::text))
 );
 
 
