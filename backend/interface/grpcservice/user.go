@@ -3,9 +3,9 @@ package grpcservice
 import (
 	"context"
 
-	"github.com/google/uuid"
 	pb "github.com/kanaru-ssk/payment-manager/backend/interface/proto/user/v1"
 	"github.com/kanaru-ssk/payment-manager/backend/usecase"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -22,12 +22,8 @@ func NewUserService(
 	}
 }
 
-func (h *UserService) FindUserByUserId(ctx context.Context, req *pb.FindUserByUserIdRequest) (*pb.FindUserByUserIdResponse, error) {
-	userId, err := uuid.Parse(req.UserId)
-	if err != nil {
-		return nil, err
-	}
-	u, err := h.useCase.FindUserByUserId(ctx, userId)
+func (s *UserService) FindUserByUserId(ctx context.Context, req *pb.FindUserByUserIdRequest) (*pb.FindUserByUserIdResponse, error) {
+	u, err := s.useCase.FindUserByUserId(ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -39,4 +35,39 @@ func (h *UserService) FindUserByUserId(ctx context.Context, req *pb.FindUserByUs
 		CreatedAt: timestamppb.New(u.CreatedAt),
 		UpdatedAt: timestamppb.New(u.UpdatedAt),
 	}}, nil
+}
+
+func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+	u, err := s.useCase.CreateUser(ctx, req.UserName, req.Email)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateUserResponse{User: &pb.User{
+		UserId:    u.UserId.String(),
+		UserName:  u.UserName,
+		Email:     u.Email.String(),
+		CreatedAt: timestamppb.New(u.CreatedAt),
+		UpdatedAt: timestamppb.New(u.UpdatedAt),
+	}}, nil
+}
+
+func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	u, err := s.useCase.UpdateUser(ctx, req.UserName, req.Email)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateUserResponse{User: &pb.User{
+		UserId:    u.UserId.String(),
+		UserName:  u.UserName,
+		Email:     u.Email.String(),
+		CreatedAt: timestamppb.New(u.CreatedAt),
+		UpdatedAt: timestamppb.New(u.UpdatedAt),
+	}}, nil
+}
+
+func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*emptypb.Empty, error) {
+	if err := s.useCase.DeleteUser(ctx, req.UserId); err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }

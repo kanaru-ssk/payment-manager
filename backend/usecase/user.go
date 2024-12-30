@@ -19,10 +19,49 @@ func NewUserUseCase(
 	}
 }
 
-func (u *UserUseCase) FindUserByUserId(ctx context.Context, userId uuid.UUID) (*user.User, error) {
-	us, err := u.userRepository.FindUserByUserId(ctx, userId)
+func (u *UserUseCase) FindUserByUserId(ctx context.Context, userId string) (*user.User, error) {
+	ui, err := uuid.Parse(userId)
+	if err != nil {
+		return nil, err
+	}
+	us, err := u.userRepository.FindUserByUserId(ctx, ui)
 	if err != nil {
 		return nil, err
 	}
 	return us, nil
+}
+
+func (u *UserUseCase) CreateUser(ctx context.Context, userName, email string) (*user.User, error) {
+	e, err := user.NewEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	us, err := u.userRepository.CreateUser(ctx, userName, e)
+	if err != nil {
+		return nil, err
+	}
+	return us, nil
+}
+
+func (u *UserUseCase) UpdateUser(ctx context.Context, userName, email string) (*user.User, error) {
+	e, err := user.NewEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	us, err := u.userRepository.UpdateUser(ctx, userName, e)
+	if err != nil {
+		return nil, err
+	}
+	return us, nil
+}
+
+func (u *UserUseCase) DeleteUser(ctx context.Context, userId string) error {
+	ui, err := uuid.Parse(userId)
+	if err != nil {
+		return err
+	}
+	if err := u.userRepository.DeleteUser(ctx, ui); err != nil {
+		return err
+	}
+	return nil
 }
