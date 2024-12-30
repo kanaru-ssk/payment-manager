@@ -31,6 +31,18 @@ func (u *UserUseCase) FindUserByUserId(ctx context.Context, userId string) (*use
 	return us, nil
 }
 
+func (u *UserUseCase) FindUserByEmail(ctx context.Context, email string) (*user.User, error) {
+	e, err := user.NewEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	us, err := u.userRepository.FindUserByEmail(ctx, e)
+	if err != nil {
+		return nil, err
+	}
+	return us, nil
+}
+
 func (u *UserUseCase) CreateUser(ctx context.Context, userName, email string) (*user.User, error) {
 	e, err := user.NewEmail(email)
 	if err != nil {
@@ -43,12 +55,16 @@ func (u *UserUseCase) CreateUser(ctx context.Context, userName, email string) (*
 	return us, nil
 }
 
-func (u *UserUseCase) UpdateUser(ctx context.Context, userName, email string) (*user.User, error) {
+func (u *UserUseCase) UpdateUser(ctx context.Context, userId, userName, email string) (*user.User, error) {
+	ui, err := uuid.Parse(userId)
+	if err != nil {
+		return nil, err
+	}
 	e, err := user.NewEmail(email)
 	if err != nil {
 		return nil, err
 	}
-	us, err := u.userRepository.UpdateUser(ctx, userName, e)
+	us, err := u.userRepository.UpdateUser(ctx, ui, userName, e)
 	if err != nil {
 		return nil, err
 	}

@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	UserService_FindUserByUserId_FullMethodName = "/user.v1.UserService/FindUserByUserId"
+	UserService_FindUserByEmail_FullMethodName  = "/user.v1.UserService/FindUserByEmail"
 	UserService_CreateUser_FullMethodName       = "/user.v1.UserService/CreateUser"
 	UserService_UpdateUser_FullMethodName       = "/user.v1.UserService/UpdateUser"
 	UserService_DeleteUser_FullMethodName       = "/user.v1.UserService/DeleteUser"
@@ -31,6 +32,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	FindUserByUserId(ctx context.Context, in *FindUserByUserIdRequest, opts ...grpc.CallOption) (*FindUserByUserIdResponse, error)
+	FindUserByEmail(ctx context.Context, in *FindUserByEmailRequest, opts ...grpc.CallOption) (*FindUserByEmailResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -48,6 +50,16 @@ func (c *userServiceClient) FindUserByUserId(ctx context.Context, in *FindUserBy
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(FindUserByUserIdResponse)
 	err := c.cc.Invoke(ctx, UserService_FindUserByUserId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FindUserByEmail(ctx context.Context, in *FindUserByEmailRequest, opts ...grpc.CallOption) (*FindUserByEmailResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FindUserByEmailResponse)
+	err := c.cc.Invoke(ctx, UserService_FindUserByEmail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,6 +101,7 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 // for forward compatibility.
 type UserServiceServer interface {
 	FindUserByUserId(context.Context, *FindUserByUserIdRequest) (*FindUserByUserIdResponse, error)
+	FindUserByEmail(context.Context, *FindUserByEmailRequest) (*FindUserByEmailResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
@@ -104,6 +117,9 @@ type UnimplementedUserServiceServer struct{}
 
 func (UnimplementedUserServiceServer) FindUserByUserId(context.Context, *FindUserByUserIdRequest) (*FindUserByUserIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindUserByUserId not implemented")
+}
+func (UnimplementedUserServiceServer) FindUserByEmail(context.Context, *FindUserByEmailRequest) (*FindUserByEmailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindUserByEmail not implemented")
 }
 func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
@@ -149,6 +165,24 @@ func _UserService_FindUserByUserId_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).FindUserByUserId(ctx, req.(*FindUserByUserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FindUserByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindUserByEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FindUserByEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_FindUserByEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FindUserByEmail(ctx, req.(*FindUserByEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -217,6 +251,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindUserByUserId",
 			Handler:    _UserService_FindUserByUserId_Handler,
+		},
+		{
+			MethodName: "FindUserByEmail",
+			Handler:    _UserService_FindUserByEmail_Handler,
 		},
 		{
 			MethodName: "CreateUser",

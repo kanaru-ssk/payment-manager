@@ -1,7 +1,9 @@
 UPDATE users
 SET
-    user_name = $1,
-    email = $2
+    user_name = $2,
+    email = $3
+WHERE
+    user_id = $1
 RETURNING
     user_id,
     user_name,

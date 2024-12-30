@@ -37,6 +37,21 @@ func (s *UserService) FindUserByUserId(ctx context.Context, req *pb.FindUserByUs
 	}}, nil
 }
 
+func (s *UserService) FindUserByEmail(ctx context.Context, req *pb.FindUserByEmailRequest) (*pb.FindUserByEmailResponse, error) {
+	u, err := s.useCase.FindUserByEmail(ctx, req.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.FindUserByEmailResponse{User: &pb.User{
+		UserId:    u.UserId.String(),
+		UserName:  u.UserName,
+		Email:     u.Email.String(),
+		CreatedAt: timestamppb.New(u.CreatedAt),
+		UpdatedAt: timestamppb.New(u.UpdatedAt),
+	}}, nil
+}
+
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	u, err := s.useCase.CreateUser(ctx, req.UserName, req.Email)
 	if err != nil {
@@ -52,7 +67,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	u, err := s.useCase.UpdateUser(ctx, req.UserName, req.Email)
+	u, err := s.useCase.UpdateUser(ctx, req.UserId, req.UserName, req.Email)
 	if err != nil {
 		return nil, err
 	}
