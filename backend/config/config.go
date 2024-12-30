@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	Port        int    `env:"PORT,default=8080"`
-	DatabaseUrl string `env:"DATABASE_URL,required"`
+	DatabaseUrl string `env:"DATABASE_URL,default=postgres://postgres:password@db:5432/postgres?sslmode=disable"`
 }
 
 func New(ctx context.Context) *Config {
