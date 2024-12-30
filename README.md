@@ -31,3 +31,25 @@ docker compose up --watch # 全サービス起動
 ./scripts/dbmate.sh up    # DBスキーマ適用
 ./scripts/dbseed.sh       # テストデータ挿入
 ```
+
+### frontend
+
+ブラウザで以下にアクセスできれば起動成功
+
+http://localhost:3000
+
+### backend
+
+ターミナルで以下コマンドでレスポンスが確認できれば起動成功
+
+```sh
+grpcurl -plaintext -d '{"email": "harry-potter@example.com"}' -proto proto/user/v1/user.proto localhost:8000 user.v1.UserService/FindUserByEmail
+```
+
+### db
+
+以下コマンドでデータベースに接続できれば起動成功
+
+```sh
+./scripts/dbclient.sh
+```

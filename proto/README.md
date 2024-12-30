@@ -11,5 +11,5 @@ Payment Manager のバックエンドとフロントエンド間の通信で使�
 ## 開発用コマンド
 
 ```sh
-./scripts/dev/protoc.sh user v1
+./scripts/protoc.sh user v1
 ```
