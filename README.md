@@ -27,5 +27,7 @@
 ## ローカル起動方法
 
 ```sh
-docker compose up --watch
+docker compose up --watch # 全サービス起動
+./scripts/dbmate.sh up    # DBスキーマ適用
+./scripts/dbseed.sh       # テストデータ挿入
 ```
