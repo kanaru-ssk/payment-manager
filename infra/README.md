@@ -13,11 +13,11 @@ terraform fmt -recursive -write=true
 ./scripts/terraform.sh common plan
 ./scripts/terraform.sh common apply
 
-./scripts/terraform.sh dev init
-./scripts/terraform.sh dev plan
-./scripts/terraform.sh dev apply
+./scripts/terraform.sh stg init
+./scripts/terraform.sh stg plan
+./scripts/terraform.sh stg apply
 
-./scripts/terraform.sh prd init
-./scripts/terraform.sh prd plan
-./scripts/terraform.sh prd apply
+./scripts/terraform.sh prod init
+./scripts/terraform.sh prod plan
+./scripts/terraform.sh prod apply
 ```
