@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "terraform-backend-payment-manager"
+    bucket = "payment-manager-terraform-backend"
     prefix = "common"
   }
 }

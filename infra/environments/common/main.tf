@@ -1,17 +1,19 @@
 locals {
   environment = "common"
-  project_id  = "${local.environment}-${var.project_name}"
+  project_id  = "${var.project_name}-${local.environment}"
 }
 
 # Google Cloud Projectを作成
-module "google_project" {
-  source = "../../modules/google_project"
+resource "google_project" "project" {
+  project_id      = local.project_id
+  name            = local.project_id
+  billing_account = var.billing_account_id
 
-  name               = local.project_id
-  project_id         = local.project_id
-  billing_account_id = var.billing_account_id
-  environment_label  = local.environment
-  group_label        = var.project_name
+  labels = {
+    environment = local.environment
+    managed_by  = "terraform"
+    group       = var.project_name
+  }
 }
 
 provider "google" {
@@ -21,7 +23,7 @@ provider "google" {
 
 # Terraform Backend用のCloud Storage Bucketを作成
 resource "google_storage_bucket" "terraform_backend" {
-  name          = "terraform-backend-${var.project_name}"
+  name          = "${var.project_name}-terraform-backend"
   location      = var.region
   force_destroy = true
 
