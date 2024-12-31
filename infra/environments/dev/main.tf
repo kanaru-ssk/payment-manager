@@ -26,6 +26,7 @@ module "project_services" {
   services = [
     "iamcredentials.googleapis.com",
     "artifactregistry.googleapis.com",
+    "secretmanager.googleapis.com",
     "run.googleapis.com"
   ]
 }
@@ -73,4 +74,12 @@ module "frontend" {
 
   name   = "${local.project_id}-frontend"
   region = var.region
+}
+
+# Secret Managerにシークレッド作成
+module "secret" {
+  source = "../../modules/secret_manager_secret"
+
+  secret_names = ["DATABASE_URL"]
+  accessor     = "serviceAccount:${module.google_project.project_number}-compute@developer.gserviceaccount.com"
 }
