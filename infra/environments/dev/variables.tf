@@ -12,3 +12,8 @@ variable "region" {
   type        = string
   description = "Region"
 }
+
+variable "db_user_password" {
+  type        = string
+  description = "Google Cloud SQL User Password"
+}

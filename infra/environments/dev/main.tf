@@ -48,6 +48,17 @@ module "artifact_registry_main" {
   writer_emails = [module.github_actions_service_account.email]
 }
 
+# Cloud SQLを作成
+module "db" {
+  source = "../../modules/cloud_sql"
+
+  instance_name = "payment-manager"
+  database_name = "payment-manager"
+  region        = var.region
+  user_name     = "${local.environment}_backend"
+  user_password = var.db_user_password
+}
+
 # backend用のCloud Run Serviceを作成
 module "backend" {
   source = "../../modules/cloud_run_service"
