@@ -9,9 +9,9 @@ spec:
         - image: asia-northeast1-docker.pkg.dev/payment-manager-stg/main/backend:${IMAGE_TAG}
           ports:
             - name: h2c
-          env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  key: "1"
-                  name: DATABASE_URL
+          # env:
+          #   - name: DATABASE_URL
+          #     valueFrom:
+          #       secretKeyRef:
+          #         key: "1"
+          #         name: DATABASE_URL
