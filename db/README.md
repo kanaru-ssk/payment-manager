@@ -30,9 +30,11 @@ Payment Manager のデータベースサービス
 [Cloud SQL Auth Proxy](https://cloud.google.com/sql/docs/mysql/sql-prox)をローカルで起動し、これを経由して Cloud SQL に接続します。
 
 ```sh
+# TODO: vpcに接続する手順記載
+
 # Cloud SQL Auth Proxy起動
 ./scripts/dbproxy.sh
 
 # 開発用コマンドに環境変数を指定して接続
-DB_USER=dev_backend DB_PW=password ./scripts/dbclient.sh
+DB_USER=backend-stg DB_PW=password ./scripts/dbclient.sh
 ```

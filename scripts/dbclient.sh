@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_USER=${DB_USER:-local_backend}
+DB_USER=${DB_USER:-backend-stg}
 DB_PW=${DB_PW:-password}
 
 docker run --rm -it --network=host \
