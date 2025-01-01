@@ -19,7 +19,6 @@ permissions:
 
 jobs:
   backend-deploy:
-    environment: stg
     name: backend Deploy
     uses: ./.github/workflows/reusable-deploy.yaml
     with:
@@ -30,7 +29,6 @@ jobs:
       image_tag: ${{ github.sha }}
 
   frontend-deploy:
-    environment: stg
     # needs: backend-deploy # SSGする場合はbackendデプロイ後にbuildする
     name: frontend Deploy
     uses: ./.github/workflows/reusable-deploy.yaml
