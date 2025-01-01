@@ -84,6 +84,8 @@ jobs:
           context: ${{ inputs.context }}
           push: true
           tags: asia-northeast1-docker.pkg.dev/${{ steps.project.outputs.project_id }}/main/${{ inputs.service_name }}:${{ github.sha }}
+          secrets: |
+            BACKEND_URL=${{ secrets.BACKEND_URL }}
 
       # yaml 内のイメージタグを書き換える
       - name: Replace Image Tag
