@@ -25,7 +25,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	cloudSqlClient, err := cloudsql.NewClient(config.DatabaseUrl)
+	cloudSqlClient, err := cloudsql.NewClient(config.DbUrl)
 	if err != nil {
 		log.Fatalf("main.main err: %v", err)
 	}
