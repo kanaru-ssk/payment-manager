@@ -26,6 +26,8 @@ resource "google_project_service" "services" {
   for_each = toset([
     "iamcredentials.googleapis.com",
     "vpcaccess.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "sqladmin.googleapis.com",
     "artifactregistry.googleapis.com",
     "run.googleapis.com",
     "secretmanager.googleapis.com"
@@ -75,17 +77,31 @@ resource "google_compute_subnetwork" "db_subnet" {
   network       = google_compute_network.vpc.id
 }
 
-# Cloud SQLを作成
-# module "db" {
-#   source = "../../modules/cloud_sql"
+resource "google_compute_global_address" "private_ip_address" {
+  name          = "private-ip-address"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = google_compute_network.vpc.id
+}
 
-#   instance_name = "payment-manager"
-#   database_name = "payment-manager"
-#   region        = var.region
-#   user_name     = "${local.environment}_backend"
-#   user_password = var.db_user_password
-#   vpc_link      = module.vpc.self_link
-# }
+resource "google_service_networking_connection" "default" {
+  network                 = google_compute_network.vpc.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
+}
+
+# Cloud SQLを作成
+module "db" {
+  source = "../../modules/cloud_sql"
+
+  instance_name = "payment-manager"
+  database_name = "payment-manager"
+  region        = var.region
+  user_name     = "backend-${local.environment}"
+  user_password = var.db_user_password
+  vpc_link      = google_compute_network.vpc.self_link
+}
 
 # backend用のCloud Run Serviceを作成
 module "backend" {
@@ -111,4 +127,10 @@ module "frontend_secret" {
 
   secret_names = ["BACKEND_URL"]
   accessor     = "serviceAccount:${module.frontend.service_account_email}"
+}
+module "backend-secret" {
+  source = "../../modules/secret_manager_secret"
+
+  secret_names = ["DB_URL"]
+  accessor     = "serviceAccount:${module.backend.service_account_email}"
 }

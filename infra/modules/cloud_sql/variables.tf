@@ -1,11 +1,16 @@
+variable "instance_name" {
+  type        = string
+  description = "Google Cloud SQL Instance Name"
+}
+
 variable "region" {
   type        = string
   description = "Region"
 }
 
-variable "instance_name" {
+variable "vpc_link" {
   type        = string
-  description = "Google Cloud SQL Instance Name"
+  description = "Virtual Private Cloud Link"
 }
 
 variable "database_name" {
