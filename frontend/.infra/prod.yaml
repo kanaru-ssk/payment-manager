@@ -18,3 +18,9 @@ spec:
       serviceAccountName: frontend@payment-manager-prod.iam.gserviceaccount.com
       containers:
         - image: asia-northeast1-docker.pkg.dev/payment-manager-prod/main/frontend:${IMAGE_TAG}
+          env:
+            - name: BACKEND_URL
+              valueFrom:
+                secretKeyRef:
+                  name: BACKEND_URL
+                  key: latest
