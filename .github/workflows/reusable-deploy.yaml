@@ -27,7 +27,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.env }}
+    environment: stg
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
