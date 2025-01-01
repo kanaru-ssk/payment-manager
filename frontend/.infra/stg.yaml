@@ -2,8 +2,19 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: frontend
+  labels:
+    cloud.googleapis.com/location: asia-northeast1
+  annotations:
+    run.googleapis.com/ingress: all
 spec:
   template:
+    metadata:
+      annotations:
+        run.googleapis.com/vpc-access-egress: all-traffic
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "1"
+        run.googleapis.com/network-interfaces: '[{"network":"vpc","subnetwork":"backend-subnet"}]'
     spec:
+      serviceAccountName: frontend@payment-manager-stg.iam.gserviceaccount.com
       containers:
         - image: asia-northeast1-docker.pkg.dev/payment-manager-stg/main/frontend:${IMAGE_TAG}
