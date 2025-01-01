@@ -310,6 +310,143 @@ export namespace user.v1 {
             return FindUserByUserIdResponse.deserialize(bytes);
         }
     }
+    export class FindUserByEmailRequest extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            email?: string;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("email" in data && data.email != undefined) {
+                    this.email = data.email;
+                }
+            }
+        }
+        get email() {
+            return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+        }
+        set email(value: string) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        static fromObject(data: {
+            email?: string;
+        }): FindUserByEmailRequest {
+            const message = new FindUserByEmailRequest({});
+            if (data.email != null) {
+                message.email = data.email;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                email?: string;
+            } = {};
+            if (this.email != null) {
+                data.email = this.email;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.email.length)
+                writer.writeString(1, this.email);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): FindUserByEmailRequest {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new FindUserByEmailRequest();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.email = reader.readString();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): FindUserByEmailRequest {
+            return FindUserByEmailRequest.deserialize(bytes);
+        }
+    }
+    export class FindUserByEmailResponse extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            user?: User;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("user" in data && data.user != undefined) {
+                    this.user = data.user;
+                }
+            }
+        }
+        get user() {
+            return pb_1.Message.getWrapperField(this, User, 1) as User;
+        }
+        set user(value: User) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_user() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            user?: ReturnType<typeof User.prototype.toObject>;
+        }): FindUserByEmailResponse {
+            const message = new FindUserByEmailResponse({});
+            if (data.user != null) {
+                message.user = User.fromObject(data.user);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                user?: ReturnType<typeof User.prototype.toObject>;
+            } = {};
+            if (this.user != null) {
+                data.user = this.user.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_user)
+                writer.writeMessage(1, this.user, () => this.user.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): FindUserByEmailResponse {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new FindUserByEmailResponse();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.user, () => message.user = User.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): FindUserByEmailResponse {
+            return FindUserByEmailResponse.deserialize(bytes);
+        }
+    }
     export class CreateUserRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
@@ -473,12 +610,16 @@ export namespace user.v1 {
     export class UpdateUserRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
+            user_id?: string;
             user_name?: string;
             email?: string;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
+                if ("user_id" in data && data.user_id != undefined) {
+                    this.user_id = data.user_id;
+                }
                 if ("user_name" in data && data.user_name != undefined) {
                     this.user_name = data.user_name;
                 }
@@ -487,23 +628,33 @@ export namespace user.v1 {
                 }
             }
         }
-        get user_name() {
+        get user_id() {
             return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
         }
-        set user_name(value: string) {
+        set user_id(value: string) {
             pb_1.Message.setField(this, 1, value);
         }
-        get email() {
+        get user_name() {
             return pb_1.Message.getFieldWithDefault(this, 2, "") as string;
         }
-        set email(value: string) {
+        set user_name(value: string) {
             pb_1.Message.setField(this, 2, value);
         }
+        get email() {
+            return pb_1.Message.getFieldWithDefault(this, 3, "") as string;
+        }
+        set email(value: string) {
+            pb_1.Message.setField(this, 3, value);
+        }
         static fromObject(data: {
+            user_id?: string;
             user_name?: string;
             email?: string;
         }): UpdateUserRequest {
             const message = new UpdateUserRequest({});
+            if (data.user_id != null) {
+                message.user_id = data.user_id;
+            }
             if (data.user_name != null) {
                 message.user_name = data.user_name;
             }
@@ -514,9 +665,13 @@ export namespace user.v1 {
         }
         toObject() {
             const data: {
+                user_id?: string;
                 user_name?: string;
                 email?: string;
             } = {};
+            if (this.user_id != null) {
+                data.user_id = this.user_id;
+            }
             if (this.user_name != null) {
                 data.user_name = this.user_name;
             }
@@ -529,10 +684,12 @@ export namespace user.v1 {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
+            if (this.user_id.length)
+                writer.writeString(1, this.user_id);
             if (this.user_name.length)
-                writer.writeString(1, this.user_name);
+                writer.writeString(2, this.user_name);
             if (this.email.length)
-                writer.writeString(2, this.email);
+                writer.writeString(3, this.email);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -543,9 +700,12 @@ export namespace user.v1 {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.user_name = reader.readString();
+                        message.user_id = reader.readString();
                         break;
                     case 2:
+                        message.user_name = reader.readString();
+                        break;
+                    case 3:
                         message.email = reader.readString();
                         break;
                     default: reader.skipField();
@@ -732,6 +892,15 @@ export namespace user.v1 {
                 responseSerialize: (message: FindUserByUserIdResponse) => Buffer.from(message.serialize()),
                 responseDeserialize: (bytes: Buffer) => FindUserByUserIdResponse.deserialize(new Uint8Array(bytes))
             },
+            FindUserByEmail: {
+                path: "/user.v1.UserService/FindUserByEmail",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: FindUserByEmailRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => FindUserByEmailRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: FindUserByEmailResponse) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => FindUserByEmailResponse.deserialize(new Uint8Array(bytes))
+            },
             CreateUser: {
                 path: "/user.v1.UserService/CreateUser",
                 requestStream: false,
@@ -762,6 +931,7 @@ export namespace user.v1 {
         };
         [method: string]: grpc_1.UntypedHandleCall;
         abstract FindUserByUserId(call: grpc_1.ServerUnaryCall<FindUserByUserIdRequest, FindUserByUserIdResponse>, callback: grpc_1.sendUnaryData<FindUserByUserIdResponse>): void;
+        abstract FindUserByEmail(call: grpc_1.ServerUnaryCall<FindUserByEmailRequest, FindUserByEmailResponse>, callback: grpc_1.sendUnaryData<FindUserByEmailResponse>): void;
         abstract CreateUser(call: grpc_1.ServerUnaryCall<CreateUserRequest, CreateUserResponse>, callback: grpc_1.sendUnaryData<CreateUserResponse>): void;
         abstract UpdateUser(call: grpc_1.ServerUnaryCall<UpdateUserRequest, UpdateUserResponse>, callback: grpc_1.sendUnaryData<UpdateUserResponse>): void;
         abstract DeleteUser(call: grpc_1.ServerUnaryCall<DeleteUserRequest, dependency_1.google.protobuf.Empty>, callback: grpc_1.sendUnaryData<dependency_1.google.protobuf.Empty>): void;
@@ -772,6 +942,9 @@ export namespace user.v1 {
         }
         FindUserByUserId: GrpcUnaryServiceInterface<FindUserByUserIdRequest, FindUserByUserIdResponse> = (message: FindUserByUserIdRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<FindUserByUserIdResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<FindUserByUserIdResponse>, callback?: grpc_1.requestCallback<FindUserByUserIdResponse>): grpc_1.ClientUnaryCall => {
             return super.FindUserByUserId(message, metadata, options, callback);
+        };
+        FindUserByEmail: GrpcUnaryServiceInterface<FindUserByEmailRequest, FindUserByEmailResponse> = (message: FindUserByEmailRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<FindUserByEmailResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<FindUserByEmailResponse>, callback?: grpc_1.requestCallback<FindUserByEmailResponse>): grpc_1.ClientUnaryCall => {
+            return super.FindUserByEmail(message, metadata, options, callback);
         };
         CreateUser: GrpcUnaryServiceInterface<CreateUserRequest, CreateUserResponse> = (message: CreateUserRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<CreateUserResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<CreateUserResponse>, callback?: grpc_1.requestCallback<CreateUserResponse>): grpc_1.ClientUnaryCall => {
             return super.CreateUser(message, metadata, options, callback);

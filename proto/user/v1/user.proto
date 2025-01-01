@@ -10,6 +10,7 @@ option go_package = "github.com/kanaru-ssk/payment-manager/backend/interface/pro
 service UserService {
   rpc FindUserByUserId(FindUserByUserIdRequest)
       returns (FindUserByUserIdResponse);
+  rpc FindUserByEmail(FindUserByEmailRequest) returns (FindUserByEmailResponse);
 
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
@@ -32,6 +33,14 @@ message FindUserByUserIdResponse {
   User user = 1;
 }
 
+message FindUserByEmailRequest {
+  string email = 1;
+}
+
+message FindUserByEmailResponse {
+  User user = 1;
+}
+
 message CreateUserRequest {
   string user_name = 1;
   string email = 2;
@@ -42,8 +51,9 @@ message CreateUserResponse {
 }
 
 message UpdateUserRequest {
-  string user_name = 1;
-  string email = 2;
+  string user_id = 1;
+  string user_name = 2;
+  string email = 3;
 }
 
 message UpdateUserResponse {

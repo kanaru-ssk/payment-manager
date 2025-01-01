@@ -1,4 +1,5 @@
 import { type User } from "./entity";
+import { type Email } from "./value_object";
 
 /**
  * 指定されたuserIdに基づいてユーザーを取得
@@ -8,18 +9,34 @@ import { type User } from "./entity";
 export type FindUserByUserId = (userId: string) => Promise<User | null>;
 
 /**
+ * 指定されたemailに基づいてユーザーを取得
+ * @param email - メールアドレス
+ * @returns ユーザー情報、またはnull
+ */
+export type FindUserByEmail = (email: Email) => Promise<User | null>;
+
+/**
  * 新しいユーザーを作成
- * @param user - ユーザー情報
+ * @param userName - ユーザー名
+ * @param email - メールアドレス
  * @returns 作成されたユーザー情報
  */
-export type CreateUser = (user: User) => Promise<User | null>;
+export type CreateUser = (
+  userName: string,
+  email: Email
+) => Promise<User | null>;
 
 /**
  * ユーザー情報を更新
- * @param user - 更新するユーザー情報
+ * @param userName - 新しいユーザー名
+ * @param email - メールアドレス
  * @returns 更新されたユーザー情報
  */
-export type UpdateUser = (user: User) => Promise<User | null>;
+export type UpdateUser = (
+  userId: string,
+  userName: string,
+  email: Email
+) => Promise<User | null>;
 
 /**
  * 指定されたuserIdのユーザーを削除

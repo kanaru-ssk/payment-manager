@@ -7,8 +7,10 @@ import (
 	"net"
 
 	"github.com/kanaru-ssk/payment-manager/backend/config"
+	"github.com/kanaru-ssk/payment-manager/backend/infrastructure/persistence"
 	"github.com/kanaru-ssk/payment-manager/backend/interface/grpcservice"
 	pb "github.com/kanaru-ssk/payment-manager/backend/interface/proto/user/v1"
+	"github.com/kanaru-ssk/payment-manager/backend/usecase"
 	"google.golang.org/grpc"
 )
 
@@ -22,8 +24,16 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	userService := grpcservice.NewUserService()
+	// cloudSqlClient, err := cloudsql.NewClient(config.DatabaseUrl)
+	// if err != nil {
+	// 	log.Fatalf("main.main err: %v", err)
+	// }
+	// userRepository := persistence.NewUserRepository(cloudSqlClient)
+	userRepository := persistence.NewUserRepository()
+	userUseCase := usecase.NewUserUseCase(userRepository)
+	userService := grpcservice.NewUserService(userUseCase)
 	pb.RegisterUserServiceServer(s, userService)
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

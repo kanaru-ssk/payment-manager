@@ -7,10 +7,10 @@ on:
         type: choice
         required: true
         description: デプロイ先
-        default: dev
+        default: stg
         options:
-          - dev
-          - prd
+          - prod
+          - stg
 
 # Google Cloud と OIDC 連携するために id-token: write 権限が必要
 permissions:
@@ -24,9 +24,10 @@ jobs:
     with:
       env: ${{ inputs.env }}
       context: ./backend
-      service_name: payment-manager-backend
+      service_name: backend
       yaml_path: ./backend/.infra/grpc-server/${{ inputs.env }}.yaml
       image_tag: ${{ github.sha }}
+    secrets: inherit
 
   frontend-deploy:
     # needs: backend-deploy # SSGする場合はbackendデプロイ後にbuildする
@@ -35,6 +36,7 @@ jobs:
     with:
       env: ${{ inputs.env }}
       context: ./frontend
-      service_name: payment-manager-frontend
+      service_name: frontend
       yaml_path: ./frontend/.infra/${{ inputs.env }}.yaml
       image_tag: ${{ github.sha }}
+    secrets: inherit

@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { type Email, emailSchema } from "./value_object";
 
 export type User = {
   userId: string;
   userName: string;
-  email: string;
+  email: Email;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -11,7 +12,7 @@ export type User = {
 export const userSchema: z.ZodType<User> = z.object({
   userId: z.string().uuid(),
   userName: z.string(),
-  email: z.string().email(),
+  email: emailSchema,
   createdAt: z.date(),
   updatedAt: z.date(),
 });
