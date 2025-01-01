@@ -2,7 +2,6 @@
 resource "google_cloud_run_v2_service" "default" {
   name     = var.name
   location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL" # TODO: backendはINGRESS_TRAFFIC_INTERNAL_ONLYにする
 
   template {
     containers {
@@ -12,7 +11,7 @@ resource "google_cloud_run_v2_service" "default" {
     }
   }
 
-  # リソース作成後、templateの変更を無視する
+  # リソース作成後、containersの変更を無視する
   lifecycle {
     ignore_changes = [template]
   }
@@ -24,4 +23,14 @@ resource "google_cloud_run_service_iam_binding" "default" {
   service  = google_cloud_run_v2_service.default.name
   role     = "roles/run.invoker"
   members  = ["allUsers"]
+}
+
+resource "google_service_account" "cloud_run_sa" {
+  account_id = var.name
+}
+
+resource "google_service_account_iam_member" "service_account_act_as" {
+  service_account_id = google_service_account.cloud_run_sa.id
+  member             = "serviceAccount:${var.deploy_account_email}"
+  role               = "roles/iam.serviceAccountUser"
 }
