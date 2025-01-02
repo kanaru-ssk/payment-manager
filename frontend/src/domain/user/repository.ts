@@ -1,5 +1,5 @@
-import { type User } from "./entity";
-import { type Email } from "./value-object";
+import type { User } from "./entity";
+import type { Email } from "./value-object";
 
 /**
  * 指定されたuserIdに基づいてユーザーを取得
@@ -22,8 +22,8 @@ export type FindUserByEmail = (email: Email) => Promise<User | null>;
  * @returns 作成されたユーザー情報
  */
 export type CreateUser = (
-  userName: string,
-  email: Email
+	userName: string,
+	email: Email,
 ) => Promise<User | null>;
 
 /**
@@ -33,9 +33,9 @@ export type CreateUser = (
  * @returns 更新されたユーザー情報
  */
 export type UpdateUser = (
-  userId: string,
-  userName: string,
-  email: Email
+	userId: string,
+	userName: string,
+	email: Email,
 ) => Promise<User | null>;
 
 /**

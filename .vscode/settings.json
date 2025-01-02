@@ -1,0 +1,7 @@
+{
+	"biome.lspBin": "./frontend/node_modules/@biomejs/biome/bin/biome",
+	"editor.codeActionsOnSave": {
+		"quickfix.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	}
+}
