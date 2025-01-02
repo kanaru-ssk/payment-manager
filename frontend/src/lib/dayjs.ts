@@ -14,5 +14,5 @@ extend(timezone);
  * @param date 対象の日時
  */
 export function formatDatetime(date: dayjs.ConfigType): string {
-  return dayjs(date).tz(dayjs.tz.guess()).format("YYYY/MM/DD HH:mm");
+	return dayjs(date).tz(dayjs.tz.guess()).format("YYYY/MM/DD HH:mm");
 }

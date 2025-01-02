@@ -8,10 +8,10 @@ import { useEffect, useState } from "react";
  * @returns クライアントサイドで実行された`fn`の結果
  */
 export function useHydratedValue<T, Args extends unknown[]>(
-  fn: (...args: Args) => T,
-  ...args: Args
+	fn: (...args: Args) => T,
+	...args: Args
 ) {
-  const [state, setState] = useState<T | null>(null);
-  useEffect(() => setState(fn(...args)), [args, fn]);
-  return state;
+	const [state, setState] = useState<T | null>(null);
+	useEffect(() => setState(fn(...args)), [args, fn]);
+	return state;
 }
