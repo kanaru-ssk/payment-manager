@@ -1,5 +1,5 @@
 import { type User } from "./entity";
-import { type Email } from "./value_object";
+import { type Email } from "./value-object";
 
 /**
  * 指定されたuserIdに基づいてユーザーを取得

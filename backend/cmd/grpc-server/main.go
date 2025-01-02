@@ -19,12 +19,7 @@ func main() {
 	ctx := context.Background()
 	config := config.New(ctx)
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.Port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	s := grpc.NewServer()
-
+	// DI ---------------------------------------------------------
 	cloudSqlClient, err := cloudsql.NewClient(config.DbUrl)
 	if err != nil {
 		log.Fatalf("main.main err: %v", err)
@@ -32,7 +27,15 @@ func main() {
 	userRepository := persistence.NewUserRepository(cloudSqlClient)
 	userUseCase := usecase.NewUserUseCase(userRepository)
 	userService := grpcservice.NewUserService(userUseCase)
+
+	// gRPC Service登録 -------------------------------------------
+	s := grpc.NewServer()
 	pb.RegisterUserServiceServer(s, userService)
+
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.Port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

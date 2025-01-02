@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type Email, emailSchema } from "./value_object";
+import { type Email, emailSchema } from "./value-object";
 
 export type User = {
   userId: string;
