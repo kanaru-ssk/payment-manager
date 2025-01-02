@@ -6,6 +6,11 @@ resource "google_sql_database_instance" "instance" {
   settings {
     edition = "ENTERPRISE"
     tier    = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled                                  = false
+      private_network                               = var.vpc_link
+      enable_private_path_for_google_cloud_services = true
+    }
   }
 }
 

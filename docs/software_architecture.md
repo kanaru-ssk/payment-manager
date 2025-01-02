@@ -4,13 +4,14 @@
 
 ```
 payment-manager/
-├── .github/
-├── backend/
-├── db/
-├── docs/
-├── frontend/
-├── infra/
-├── scripts/
+├── .github/     # CI/CD
+├── backend/     # GoのgRPCサーバー
+├── db/          # DBスキーマ、マイグレーションファイル
+├── docs/        # ドキュメント
+├── frontend/    # Next.js
+├── infra/       # インフラをterraformで管理
+├── proto/       # gRPCのAPIスキーマ定義
+├── scripts/     # 開発用のスクリプト
 └── compose.yaml
 ```
 
@@ -20,11 +21,14 @@ payment-manager/
 - [`docs`](#docs)
 - [`frontend`](#frontend)
 - [`infra`](#infra)
+- [`proto`](#proto)
 - [`scripts`](#scripts)
 
 ## .github
 
 Pull Request 作成時の CI や、デプロイを実行する Workflow を実装します。
+
+Reusable Workflow は`reusable-*.yaml`という命名で統一します。
 
 ## backend
 
@@ -39,27 +43,39 @@ flowchart TB
 ```
 payment-manager/
 └── backend/
-    ├── cmd/
-    │   └── grpc-server/
+    ├── .infra/                    # Cloud Run設定
+    │   ├── prod.yaml
+    │   └── stg.yaml
+    ├── cmd/                       # エントリーポイント(DI)
+    │   └── grpc_server/
     │       └── main.go
     ├── config/
-    │   └── config.go
-    ├── domain/
+    │   └── config.go              # 環境変数の読み取り
+    ├── domain/                    # ドメインレイヤー
     │   └── user/
     │       ├── entity.go
     │       ├── error.go
     │       ├── repository.go
     │       └── value_object.go
-    ├── infrastructure/
+    ├── infrastructure/            # インフラストラクチャーレイヤー
+    │   ├── cloudsql/
+    │   │   └── client.go
+    │   └── presistence/           # domainで定義されたrepositoryなどの実装
+    │       ├── user_repository_create_user.sql
+    │       └── user_repository.go
     ├── interface/
+    │   ├── grpcservice            # gPRCサービス
+    │   │   └── user.go
+    │   └── proto/                 # protocで自動生成
     ├── lib/
-    ├── usecase/
-    │   └── user/
-    │       └── find_by_user_id.go
-    ├── test/
+    ├── test/                      # テスト
+    ├── usecase/                   # ユースケースレイヤー
+    │   └── user.go
     ├── Dockerfile
     └── go.mod
 ```
+
+ファイル名は snake_case で統一します。パッケージ名は区切りなしの小文字で統一します。
 
 ## db
 
@@ -71,7 +87,8 @@ payment-manager/
     ├── migrations/
     │   ├── 20241222221600_create_users_table.sql
     │   └── 20241222224807_create_colors_table.sql
-    └── schema.sql
+    ├── schema.sql  # dbmateで自動生成
+    └── seeds.sql
 ```
 
 ## docs
@@ -91,20 +108,25 @@ flowchart TB
 ```
 payment-manager/
 └── frontend/
+    ├── .infra/                   # Cloud Run設定
     ├── public/
     ├── src/
-    │   ├── app/
-    │   ├── components/
-    │   │   └── ui/
-    │   ├── domain/
+    │   ├── app/                  # ルーティング
+    │   ├── components/           # 共通コンポーネント
+    │   │   └── ui/               # shadcnで自動生成
+    │   ├── domain/               # ドメインレイヤー
     │   │   └── user/
     │   │       ├── entity.ts
     │   │       ├── error.ts
-    │   │       └── repository.ts
-    │   ├── hooks/
-    │   ├── infrastructure/
-    │   └── lib/
-    ├── Dockerfile
+    │   │       ├── index.ts      # バレルファイル
+    │   │       ├── repository.ts
+    │   │       └── value
+    │   ├── hooks/                 # カスタムフック
+    │   ├── infrastructure/        # インフラストラクチャーレイヤー
+    │   ├── lib/
+    │   └── env.ts                 # 環境変数の読み取り
+    ├── Dockerfile                 # 本番用
+    ├── Dockerfile.dev             # ローカル開発用
     └── package.json
 ```
 
@@ -117,32 +139,55 @@ payment-manager/
 └── infra/
     ├── environments/
     │   ├── common/
-    │   ├── dev/
-    │   └── prd/
+    │   ├── prod/
+    │   └── stg/
     ├── globals/
     │   └── common.tfvars
     └── modules/
-        └── google_project/
-            ├── main.tf
-            └── variables.tf
+        ├── artifact_registry/
+        └── cloud_run_service/
 ```
+
+module を作成する必要のないものは resource でそのまま定義します。
+
+複数 resource が必要なものなどは modules に共通化します。
 
 ### environments
 
 環境ごとの Google Cloud プロジェクトを作成します。
 terraform init, plan, apply コマンドは`infra/environments/{env}`配下で実行します。
 
+module を作成する必要のないものは resource でそのまま定義します。
+
 ### globals
 
 各プロジェクトで共通の設定をここに置きます。
 
-- `backend.tf` : [Terraform Backend](https://developer.hashicorp.com/terraform/language/backend)を指定
 - `common.tfvars` : 共通で使用する変数。`.gitignore`に指定します。
 
 ### modules
 
-各環境で共通で利用するリソースを定義します。
+各環境で共通で利用する、複数 resource が必要なものを module として定義します。
+
+modules が environments に依存しないように作成します。
+
+## proto
+
+Payment Manager のバックエンドとフロントエンド間の通信で使用する gPRC スキーマを定義します。
+
+```
+payment-manager/
+└── proto/
+    ├── user/
+    │   └── v1/
+    │       └── user.proto
+    └── color/
+        └── v1/
+            └── color.proto
+```
 
 ## scripts
 
 開発用のスクリプトを管理します。
+
+できるだけローカルにインストールするものは docker のみで済むようにします。
