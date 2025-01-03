@@ -12,8 +12,8 @@ spec:
       annotations:
         run.googleapis.com/vpc-access-egress: all-traffic
         autoscaling.knative.dev/minScale: "0"
-        autoscaling.knative.dev/maxScale: "1"
-        run.googleapis.com/network-interfaces: '[{"network":"vpc","subnetwork":"backend-subnet"}]'
+        autoscaling.knative.dev/maxScale: "10"
+        run.googleapis.com/network-interfaces: '[{"network":"vpc","subnetwork":"subnet-frontend"}]'
     spec:
       serviceAccountName: frontend@payment-manager-prod.iam.gserviceaccount.com
       containers:
