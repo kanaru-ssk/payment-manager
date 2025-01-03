@@ -8,36 +8,48 @@ import (
 
 	"github.com/kanaru-ssk/payment-manager/backend/config"
 	"github.com/kanaru-ssk/payment-manager/backend/infrastructure/cloudsql"
+	"github.com/kanaru-ssk/payment-manager/backend/infrastructure/firebaseauth"
 	"github.com/kanaru-ssk/payment-manager/backend/infrastructure/persistence"
 	"github.com/kanaru-ssk/payment-manager/backend/interface/grpcservice"
-	pb "github.com/kanaru-ssk/payment-manager/backend/interface/proto/user/v1"
+	pbpc "github.com/kanaru-ssk/payment-manager/backend/interface/proto/paymentcategory/v1"
+	pbu "github.com/kanaru-ssk/payment-manager/backend/interface/proto/user/v1"
 	"github.com/kanaru-ssk/payment-manager/backend/usecase"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	ctx := context.Background()
-	config := config.New(ctx)
-
-	// DI ---------------------------------------------------------
-	cloudSqlClient, err := cloudsql.NewClient(config.DbUrl)
+	config, err := config.NewConfig(ctx)
 	if err != nil {
-		log.Fatalf("main.main err: %v", err)
+		log.Fatalf("main.main config.NewConfig err: %v", err)
 	}
-	userRepository := persistence.NewUserRepository(cloudSqlClient)
+	db, err := cloudsql.NewClient(config.DbUrl)
+	if err != nil {
+		log.Fatalf("main.main cloudsql.NewClient err: %v", err)
+	}
+	auth, err := firebaseauth.NewClient(ctx)
+	if err != nil {
+		log.Fatalf("main.main firebaseauth.NewClient err: %v", err)
+	}
+	// DI ---------------------------------------------------------
+	userRepository := persistence.NewUserRepository(auth)
+	paymentCategoryRepository := persistence.NewPaymentCategoryRepository(db)
 	userUseCase := usecase.NewUserUseCase(userRepository)
+	paymentCategoryUseCase := usecase.NewPaymentCategoryUseCase(paymentCategoryRepository)
 	userService := grpcservice.NewUserService(userUseCase)
+	paymentCategoryService := grpcservice.NewPaymentCategoryService(paymentCategoryUseCase)
 
 	// gRPC Service登録 -------------------------------------------
 	s := grpc.NewServer()
-	pb.RegisterUserServiceServer(s, userService)
+	pbu.RegisterUserServiceServer(s, userService)
+	pbpc.RegisterPaymentCategoryServiceServer(s, paymentCategoryService)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.Port))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("main.main net.Listen err: %v", err)
 	}
 
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		log.Fatalf("main.main s.Serve err: %v", err)
 	}
 }
