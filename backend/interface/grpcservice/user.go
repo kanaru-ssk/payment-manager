@@ -29,7 +29,7 @@ func (s *UserService) FindUserByUserId(ctx context.Context, req *pb.FindUserByUs
 	}
 
 	return &pb.FindUserByUserIdResponse{User: &pb.User{
-		UserId:    u.UserId.String(),
+		UserId:    u.UserId,
 		UserName:  u.UserName,
 		Email:     u.Email.String(),
 		CreatedAt: timestamppb.New(u.CreatedAt),
@@ -44,7 +44,7 @@ func (s *UserService) FindUserByEmail(ctx context.Context, req *pb.FindUserByEma
 	}
 
 	return &pb.FindUserByEmailResponse{User: &pb.User{
-		UserId:    u.UserId.String(),
+		UserId:    u.UserId,
 		UserName:  u.UserName,
 		Email:     u.Email.String(),
 		CreatedAt: timestamppb.New(u.CreatedAt),
@@ -58,7 +58,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, err
 	}
 	return &pb.CreateUserResponse{User: &pb.User{
-		UserId:    u.UserId.String(),
+		UserId:    u.UserId,
 		UserName:  u.UserName,
 		Email:     u.Email.String(),
 		CreatedAt: timestamppb.New(u.CreatedAt),
@@ -72,7 +72,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 		return nil, err
 	}
 	return &pb.UpdateUserResponse{User: &pb.User{
-		UserId:    u.UserId.String(),
+		UserId:    u.UserId,
 		UserName:  u.UserName,
 		Email:     u.Email.String(),
 		CreatedAt: timestamppb.New(u.CreatedAt),

@@ -2,98 +2,89 @@ package persistence
 
 import (
 	"context"
-	"database/sql"
 	_ "embed"
+	"time"
 
-	"github.com/google/uuid"
+	"firebase.google.com/go/v4/auth"
 	"github.com/kanaru-ssk/payment-manager/backend/domain/user"
 )
 
 type UserRepository struct {
-	db *sql.DB
+	auth *auth.Client
 }
 
 func NewUserRepository(
-	db *sql.DB,
+	auth *auth.Client,
 ) user.UserRepository {
-	return &UserRepository{db: db}
+	return &UserRepository{auth: auth}
 }
 
-//go:embed user_repository_find_user_by_user_id.sql
-var find_user_by_user_id string
-
-func (r *UserRepository) FindUserByUserId(ctx context.Context, userId uuid.UUID) (*user.User, error) {
-	var u user.User
-	if err := r.db.QueryRow(find_user_by_user_id, userId).Scan(&u.UserId, &u.UserName, &u.Email, &u.CreatedAt, &u.UpdatedAt); err != nil {
+func (r *UserRepository) FindUserByUserId(ctx context.Context, userId string) (*user.User, error) {
+	u, err := r.auth.GetUser(ctx, userId)
+	if err != nil {
 		return nil, err
 	}
 
 	return &user.User{
-		UserId:    u.UserId,
-		UserName:  u.UserName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		UserId:    u.UID,
+		UserName:  u.DisplayName,
+		Email:     user.Email(u.Email),
+		CreatedAt: time.UnixMilli(u.UserMetadata.CreationTimestamp),
+		UpdatedAt: time.UnixMilli(u.UserMetadata.LastLogInTimestamp),
 	}, nil
 }
-
-//go:embed user_repository_find_user_by_email.sql
-var find_user_by_email string
 
 func (r *UserRepository) FindUserByEmail(ctx context.Context, email user.Email) (*user.User, error) {
-	var u user.User
-	if err := r.db.QueryRow(find_user_by_email, email).Scan(&u.UserId, &u.UserName, &u.Email, &u.CreatedAt, &u.UpdatedAt); err != nil {
+	u, err := r.auth.GetUserByEmail(ctx, email.String())
+	if err != nil {
 		return nil, err
 	}
 
 	return &user.User{
-		UserId:    u.UserId,
-		UserName:  u.UserName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		UserId:    u.UID,
+		UserName:  u.DisplayName,
+		Email:     user.Email(u.Email),
+		CreatedAt: time.UnixMilli(u.UserMetadata.CreationTimestamp),
+		UpdatedAt: time.UnixMilli(u.UserMetadata.LastLogInTimestamp),
 	}, nil
 }
-
-//go:embed user_repository_create_user.sql
-var create_user string
 
 func (r *UserRepository) CreateUser(ctx context.Context, userName string, email user.Email) (*user.User, error) {
-	var u user.User
-	if err := r.db.QueryRow(create_user, userName, email).Scan(&u.UserId, &u.UserName, &u.Email, &u.CreatedAt, &u.UpdatedAt); err != nil {
+	u, err := r.auth.CreateUser(ctx, (&auth.UserToCreate{}).
+		Email(email.String()).
+		DisplayName(userName))
+	if err != nil {
 		return nil, err
 	}
+
 	return &user.User{
-		UserId:    u.UserId,
-		UserName:  u.UserName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		UserId:    u.UID,
+		UserName:  u.DisplayName,
+		Email:     user.Email(u.Email),
+		CreatedAt: time.UnixMilli(u.UserMetadata.CreationTimestamp),
+		UpdatedAt: time.UnixMilli(u.UserMetadata.LastLogInTimestamp),
 	}, nil
 }
 
-//go:embed user_repository_update_user.sql
-var update_user string
-
-func (r *UserRepository) UpdateUser(ctx context.Context, userId uuid.UUID, userName string, email user.Email) (*user.User, error) {
-	var u user.User
-	if err := r.db.QueryRow(update_user, userId, userName, email).Scan(&u.UserId, &u.UserName, &u.Email, &u.CreatedAt, &u.UpdatedAt); err != nil {
+func (r *UserRepository) UpdateUser(ctx context.Context, userId string, userName string, email user.Email) (*user.User, error) {
+	u, err := r.auth.UpdateUser(ctx, userId, (&auth.UserToUpdate{}).
+		DisplayName(userName).
+		Email(email.String()))
+	if err != nil {
 		return nil, err
 	}
+
 	return &user.User{
-		UserId:    u.UserId,
-		UserName:  u.UserName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		UserId:    u.UID,
+		UserName:  u.DisplayName,
+		Email:     user.Email(u.Email),
+		CreatedAt: time.UnixMilli(u.UserMetadata.CreationTimestamp),
+		UpdatedAt: time.UnixMilli(u.UserMetadata.LastLogInTimestamp),
 	}, nil
 }
 
-//go:embed user_repository_delete_user.sql
-var delete_user string
-
-func (r *UserRepository) DeleteUser(ctx context.Context, userId uuid.UUID) error {
-	_, err := r.db.Exec(delete_user, userId)
+func (r *UserRepository) DeleteUser(ctx context.Context, userId string) error {
+	err := r.auth.DeleteUser(ctx, userId)
 	if err != nil {
 		return err
 	}

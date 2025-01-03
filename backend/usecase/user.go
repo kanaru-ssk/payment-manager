@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/kanaru-ssk/payment-manager/backend/domain/user"
 )
 
@@ -20,11 +19,7 @@ func NewUserUseCase(
 }
 
 func (u *UserUseCase) FindUserByUserId(ctx context.Context, userId string) (*user.User, error) {
-	ui, err := uuid.Parse(userId)
-	if err != nil {
-		return nil, err
-	}
-	us, err := u.userRepository.FindUserByUserId(ctx, ui)
+	us, err := u.userRepository.FindUserByUserId(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -56,15 +51,11 @@ func (u *UserUseCase) CreateUser(ctx context.Context, userName, email string) (*
 }
 
 func (u *UserUseCase) UpdateUser(ctx context.Context, userId, userName, email string) (*user.User, error) {
-	ui, err := uuid.Parse(userId)
-	if err != nil {
-		return nil, err
-	}
 	e, err := user.NewEmail(email)
 	if err != nil {
 		return nil, err
 	}
-	us, err := u.userRepository.UpdateUser(ctx, ui, userName, e)
+	us, err := u.userRepository.UpdateUser(ctx, userId, userName, e)
 	if err != nil {
 		return nil, err
 	}
@@ -72,11 +63,7 @@ func (u *UserUseCase) UpdateUser(ctx context.Context, userId, userName, email st
 }
 
 func (u *UserUseCase) DeleteUser(ctx context.Context, userId string) error {
-	ui, err := uuid.Parse(userId)
-	if err != nil {
-		return err
-	}
-	if err := u.userRepository.DeleteUser(ctx, ui); err != nil {
+	if err := u.userRepository.DeleteUser(ctx, userId); err != nil {
 		return err
 	}
 	return nil

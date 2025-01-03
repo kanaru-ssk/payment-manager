@@ -2,15 +2,13 @@ package user
 
 import (
 	"context"
-
-	"github.com/google/uuid"
 )
 
 type UserRepository interface {
 	// FindByUserId : 指定されたuserIdに基づいてユーザーを取得
 	// userId: ユーザーID
 	// return: ユーザー情報、またはnil
-	FindUserByUserId(ctx context.Context, userId uuid.UUID) (*User, error)
+	FindUserByUserId(ctx context.Context, userId string) (*User, error)
 
 	// FindUserByEmail : 指定されたemailに基づいてユーザーを取得
 	// email: メールアドレス
@@ -27,10 +25,10 @@ type UserRepository interface {
 	// userName: 新しいユーザー名
 	// email: 新しいメールアドレス
 	// return: 更新されたユーザー情報
-	UpdateUser(ctx context.Context, userId uuid.UUID, userName string, email Email) (*User, error)
+	UpdateUser(ctx context.Context, userId string, userName string, email Email) (*User, error)
 
 	// DeleteUser : 指定されたuserIdのユーザーを削除
 	// userId: ユーザーID
 	// return: 削除の成功状態
-	DeleteUser(ctx context.Context, userId uuid.UUID) error
+	DeleteUser(ctx context.Context, userId string) error
 }

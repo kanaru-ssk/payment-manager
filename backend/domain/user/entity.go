@@ -2,20 +2,17 @@ package user
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type User struct {
-	UserId    uuid.UUID
+	UserId    string
 	UserName  string
 	Email     Email
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-func NewUser(userName string, email Email) User {
-	userId := uuid.New()
+func NewUser(userId, userName string, email Email) User {
 	createdAt := time.Now()
 	updatedAt := time.Now()
 
