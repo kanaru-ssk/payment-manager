@@ -55,40 +55,20 @@ module "artifact_registry_main" {
 }
 
 # VPCを作成
-resource "google_compute_network" "vpc" {
-  name                    = "vpc"
-  auto_create_subnetworks = false
-}
+module "vpc" {
+  source = "../../modules/vpc"
 
-# backendリクエスト用のサブネットを作成
-resource "google_compute_subnetwork" "backend_subnet" {
-  name                     = "backend-subnet"
-  ip_cidr_range            = "10.0.0.0/24"
-  region                   = var.region
-  network                  = google_compute_network.vpc.id
-  private_ip_google_access = true
-}
-
-# dbリクエスト用のサブネットを作成
-resource "google_compute_subnetwork" "db_subnet" {
-  name          = "db-subnet"
-  ip_cidr_range = "10.0.1.0/24"
-  region        = var.region
-  network       = google_compute_network.vpc.id
-}
-
-resource "google_compute_global_address" "private_ip_address" {
-  name          = "private-ip-address"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.vpc.id
-}
-
-resource "google_service_networking_connection" "default" {
-  network                 = google_compute_network.vpc.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
+  region = var.region
+  subnetworks = {
+    subnet_backend = {
+      name          = "subnet-backend"
+      ip_cidr_range = "10.0.0.0/24"
+    }
+    subnet_frontend = {
+      name          = "subnet-frontend"
+      ip_cidr_range = "10.0.1.0/24"
+    }
+  }
 }
 
 # Cloud SQLを作成
@@ -100,7 +80,7 @@ module "db" {
   region        = var.region
   user_name     = "backend-${local.environment}"
   user_password = var.db_user_password
-  vpc_link      = google_compute_network.vpc.self_link
+  vpc_link      = module.vpc.link
 }
 
 # backend用のCloud Run Serviceを作成
