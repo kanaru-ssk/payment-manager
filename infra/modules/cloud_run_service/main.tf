@@ -1,7 +1,8 @@
 # Cloud Run Service
 resource "google_cloud_run_v2_service" "default" {
-  name     = var.name
-  location = var.region
+  name                = var.name
+  location            = var.region
+  deletion_protection = false
 
   template {
     containers {

@@ -11,6 +11,36 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: color_name_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.color_name_enum AS ENUM (
+    'slate',
+    'gray',
+    'zinc',
+    'neutral',
+    'stone',
+    'red',
+    'orange',
+    'amber',
+    'yellow',
+    'lime',
+    'green',
+    'emerald',
+    'teal',
+    'cyan',
+    'sky',
+    'blue',
+    'indigo',
+    'violet',
+    'purple',
+    'fuchsia',
+    'pink',
+    'rose'
+);
+
+
+--
 -- Name: prevent_created_at_update_and_update_updated_at(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -56,30 +86,19 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: colors; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.colors (
-    color_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    color_code character varying(7) NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    CONSTRAINT color_code_check CHECK (((color_code)::text ~ '^#[0-9A-Fa-f]{6}$'::text))
-);
-
-
---
 -- Name: payment_categories; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.payment_categories (
     payment_category_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    user_id uuid,
-    color_id uuid NOT NULL,
+    user_id character varying(64),
     payment_category_name character varying(64) NOT NULL,
     is_needs boolean NOT NULL,
+    color_name public.color_name_enum NOT NULL,
+    color_tone smallint NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT color_tone_check CHECK ((color_tone = ANY (ARRAY[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950])))
 );
 
 
@@ -89,7 +108,7 @@ CREATE TABLE public.payment_categories (
 
 CREATE TABLE public.payments (
     payment_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    user_id uuid NOT NULL,
+    user_id character varying(64) NOT NULL,
     payment_category_id uuid NOT NULL,
     payment_target character varying(64) NOT NULL,
     payment_amount integer NOT NULL,
@@ -109,28 +128,6 @@ CREATE TABLE public.payments (
 CREATE TABLE public.schema_migrations (
     version character varying(128) NOT NULL
 );
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    user_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    user_name character varying(64) NOT NULL,
-    email character varying(256) NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    CONSTRAINT email_check CHECK (((email)::text ~ '^[a-zA-Z0-9](\.?[a-zA-Z0-9_-])*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'::text))
-);
-
-
---
--- Name: colors colors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.colors
-    ADD CONSTRAINT colors_pkey PRIMARY KEY (color_id);
 
 
 --
@@ -158,19 +155,17 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: idx_payment_categories_is_needs; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_email_key UNIQUE (email);
+CREATE INDEX idx_payment_categories_is_needs ON public.payment_categories USING btree (is_needs);
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: idx_payment_categories_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+CREATE INDEX idx_payment_categories_user_id ON public.payment_categories USING btree (user_id);
 
 
 --
@@ -181,6 +176,13 @@ CREATE INDEX idx_payments_paid_at ON public.payments USING btree (paid_at);
 
 
 --
+-- Name: idx_payments_payment_amount; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_payments_payment_amount ON public.payments USING btree (payment_amount);
+
+
+--
 -- Name: idx_payments_payment_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -188,24 +190,17 @@ CREATE INDEX idx_payments_payment_category_id ON public.payments USING btree (pa
 
 
 --
+-- Name: idx_payments_satisfaction_level; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_payments_satisfaction_level ON public.payments USING btree (satisfaction_level);
+
+
+--
 -- Name: idx_payments_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_payments_user_id ON public.payments USING btree (user_id);
-
-
---
--- Name: idx_users_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_users_email ON public.users USING btree (email);
-
-
---
--- Name: colors prevent_created_at_update_and_update_updated_at_before_update; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER prevent_created_at_update_and_update_updated_at_before_update BEFORE UPDATE ON public.colors FOR EACH ROW EXECUTE FUNCTION public.prevent_created_at_update_and_update_updated_at();
 
 
 --
@@ -223,13 +218,6 @@ CREATE TRIGGER prevent_created_at_update_and_update_updated_at_before_update BEF
 
 
 --
--- Name: users prevent_created_at_update_and_update_updated_at_before_update; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER prevent_created_at_update_and_update_updated_at_before_update BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.prevent_created_at_update_and_update_updated_at();
-
-
---
 -- Name: payment_categories prevent_user_id_update_before_update; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -244,35 +232,11 @@ CREATE TRIGGER prevent_user_id_update_before_update BEFORE UPDATE ON public.paym
 
 
 --
--- Name: payment_categories payment_categories_color_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payment_categories
-    ADD CONSTRAINT payment_categories_color_id_fkey FOREIGN KEY (color_id) REFERENCES public.colors(color_id) ON DELETE RESTRICT;
-
-
---
--- Name: payment_categories payment_categories_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payment_categories
-    ADD CONSTRAINT payment_categories_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
-
-
---
 -- Name: payments payments_payment_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.payments
     ADD CONSTRAINT payments_payment_category_id_fkey FOREIGN KEY (payment_category_id) REFERENCES public.payment_categories(payment_category_id) ON DELETE RESTRICT;
-
-
---
--- Name: payments payments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payments
-    ADD CONSTRAINT payments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
 --
@@ -285,8 +249,6 @@ ALTER TABLE ONLY public.payments
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20241222221600'),
-    ('20241222224807'),
     ('20241222224843'),
     ('20241222224947'),
     ('20241222225217'),

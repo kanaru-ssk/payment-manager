@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package paymentcategory.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/kanaru-ssk/payment-manager/backend/interface/proto/paymentcategory/v1;paymentcategoryv1";
+
+service PaymentCategoryService {
+  rpc FindPaymentCategoriesByUserId(FindPaymentCategoriesByUserIdRequest)
+      returns (FindPaymentCategoriesByUserIdResponse);
+}
+
+message PaymentCategory {
+  string payment_category_id = 1;
+  string user_id = 2;
+  string payment_category_name = 3;
+  bool is_needs = 4;
+  string color_name = 5;
+  int64 color_tone = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message FindPaymentCategoriesByUserIdRequest {
+  string user_id = 1;
+}
+
+message FindPaymentCategoriesByUserIdResponse {
+  repeated PaymentCategory payment_categories = 1;
+}

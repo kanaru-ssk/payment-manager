@@ -1,6 +1,7 @@
 -- migrate:up
 -- user_id の更新を防ぐ関数
-CREATE OR REPLACE FUNCTION prevent_user_id_update () RETURNS TRIGGER AS $$
+CREATE
+OR REPLACE FUNCTION prevent_user_id_update () RETURNS TRIGGER AS $$
 BEGIN
     -- user_id の更新を防ぐ
     NEW.user_id = OLD.user_id;
@@ -24,5 +25,7 @@ EXECUTE FUNCTION prevent_user_id_update ();
 
 -- migrate:down
 DROP TRIGGER prevent_user_id_update_before_update ON payment_categories;
+
 DROP TRIGGER prevent_user_id_update_before_update ON payments;
+
 DROP FUNCTION prevent_user_id_update;
