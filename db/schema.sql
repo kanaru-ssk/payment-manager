@@ -11,6 +11,36 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: color_name_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.color_name_enum AS ENUM (
+    'slate',
+    'gray',
+    'zinc',
+    'neutral',
+    'stone',
+    'red',
+    'orange',
+    'amber',
+    'yellow',
+    'lime',
+    'green',
+    'emerald',
+    'teal',
+    'cyan',
+    'sky',
+    'blue',
+    'indigo',
+    'violet',
+    'purple',
+    'fuchsia',
+    'pink',
+    'rose'
+);
+
+
+--
 -- Name: prevent_created_at_update_and_update_updated_at(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -64,9 +94,11 @@ CREATE TABLE public.payment_categories (
     user_id character varying(64),
     payment_category_name character varying(64) NOT NULL,
     is_needs boolean NOT NULL,
-    color_code character varying(7) NOT NULL,
+    color_name public.color_name_enum NOT NULL,
+    color_tone smallint NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT color_tone_check CHECK ((color_tone = ANY (ARRAY[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950])))
 );
 
 
@@ -76,7 +108,7 @@ CREATE TABLE public.payment_categories (
 
 CREATE TABLE public.payments (
     payment_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    user_id uuid NOT NULL,
+    user_id character varying(64) NOT NULL,
     payment_category_id uuid NOT NULL,
     payment_target character varying(64) NOT NULL,
     payment_amount integer NOT NULL,

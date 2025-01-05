@@ -14,7 +14,8 @@ export namespace paymentcategory.v1 {
             user_id?: string;
             payment_category_name?: string;
             is_needs?: boolean;
-            color_code?: string;
+            color_name?: string;
+            color_tone?: number;
             created_at?: dependency_1.google.protobuf.Timestamp;
             updated_at?: dependency_1.google.protobuf.Timestamp;
         }) {
@@ -33,8 +34,11 @@ export namespace paymentcategory.v1 {
                 if ("is_needs" in data && data.is_needs != undefined) {
                     this.is_needs = data.is_needs;
                 }
-                if ("color_code" in data && data.color_code != undefined) {
-                    this.color_code = data.color_code;
+                if ("color_name" in data && data.color_name != undefined) {
+                    this.color_name = data.color_name;
+                }
+                if ("color_tone" in data && data.color_tone != undefined) {
+                    this.color_tone = data.color_tone;
                 }
                 if ("created_at" in data && data.created_at != undefined) {
                     this.created_at = data.created_at;
@@ -68,36 +72,43 @@ export namespace paymentcategory.v1 {
         set is_needs(value: boolean) {
             pb_1.Message.setField(this, 4, value);
         }
-        get color_code() {
+        get color_name() {
             return pb_1.Message.getFieldWithDefault(this, 5, "") as string;
         }
-        set color_code(value: string) {
+        set color_name(value: string) {
             pb_1.Message.setField(this, 5, value);
         }
+        get color_tone() {
+            return pb_1.Message.getFieldWithDefault(this, 6, 0) as number;
+        }
+        set color_tone(value: number) {
+            pb_1.Message.setField(this, 6, value);
+        }
         get created_at() {
-            return pb_1.Message.getWrapperField(this, dependency_1.google.protobuf.Timestamp, 6) as dependency_1.google.protobuf.Timestamp;
-        }
-        set created_at(value: dependency_1.google.protobuf.Timestamp) {
-            pb_1.Message.setWrapperField(this, 6, value);
-        }
-        get has_created_at() {
-            return pb_1.Message.getField(this, 6) != null;
-        }
-        get updated_at() {
             return pb_1.Message.getWrapperField(this, dependency_1.google.protobuf.Timestamp, 7) as dependency_1.google.protobuf.Timestamp;
         }
-        set updated_at(value: dependency_1.google.protobuf.Timestamp) {
+        set created_at(value: dependency_1.google.protobuf.Timestamp) {
             pb_1.Message.setWrapperField(this, 7, value);
         }
-        get has_updated_at() {
+        get has_created_at() {
             return pb_1.Message.getField(this, 7) != null;
+        }
+        get updated_at() {
+            return pb_1.Message.getWrapperField(this, dependency_1.google.protobuf.Timestamp, 8) as dependency_1.google.protobuf.Timestamp;
+        }
+        set updated_at(value: dependency_1.google.protobuf.Timestamp) {
+            pb_1.Message.setWrapperField(this, 8, value);
+        }
+        get has_updated_at() {
+            return pb_1.Message.getField(this, 8) != null;
         }
         static fromObject(data: {
             payment_category_id?: string;
             user_id?: string;
             payment_category_name?: string;
             is_needs?: boolean;
-            color_code?: string;
+            color_name?: string;
+            color_tone?: number;
             created_at?: ReturnType<typeof dependency_1.google.protobuf.Timestamp.prototype.toObject>;
             updated_at?: ReturnType<typeof dependency_1.google.protobuf.Timestamp.prototype.toObject>;
         }): PaymentCategory {
@@ -114,8 +125,11 @@ export namespace paymentcategory.v1 {
             if (data.is_needs != null) {
                 message.is_needs = data.is_needs;
             }
-            if (data.color_code != null) {
-                message.color_code = data.color_code;
+            if (data.color_name != null) {
+                message.color_name = data.color_name;
+            }
+            if (data.color_tone != null) {
+                message.color_tone = data.color_tone;
             }
             if (data.created_at != null) {
                 message.created_at = dependency_1.google.protobuf.Timestamp.fromObject(data.created_at);
@@ -131,7 +145,8 @@ export namespace paymentcategory.v1 {
                 user_id?: string;
                 payment_category_name?: string;
                 is_needs?: boolean;
-                color_code?: string;
+                color_name?: string;
+                color_tone?: number;
                 created_at?: ReturnType<typeof dependency_1.google.protobuf.Timestamp.prototype.toObject>;
                 updated_at?: ReturnType<typeof dependency_1.google.protobuf.Timestamp.prototype.toObject>;
             } = {};
@@ -147,8 +162,11 @@ export namespace paymentcategory.v1 {
             if (this.is_needs != null) {
                 data.is_needs = this.is_needs;
             }
-            if (this.color_code != null) {
-                data.color_code = this.color_code;
+            if (this.color_name != null) {
+                data.color_name = this.color_name;
+            }
+            if (this.color_tone != null) {
+                data.color_tone = this.color_tone;
             }
             if (this.created_at != null) {
                 data.created_at = this.created_at.toObject();
@@ -170,12 +188,14 @@ export namespace paymentcategory.v1 {
                 writer.writeString(3, this.payment_category_name);
             if (this.is_needs != false)
                 writer.writeBool(4, this.is_needs);
-            if (this.color_code.length)
-                writer.writeString(5, this.color_code);
+            if (this.color_name.length)
+                writer.writeString(5, this.color_name);
+            if (this.color_tone != 0)
+                writer.writeInt64(6, this.color_tone);
             if (this.has_created_at)
-                writer.writeMessage(6, this.created_at, () => this.created_at.serialize(writer));
+                writer.writeMessage(7, this.created_at, () => this.created_at.serialize(writer));
             if (this.has_updated_at)
-                writer.writeMessage(7, this.updated_at, () => this.updated_at.serialize(writer));
+                writer.writeMessage(8, this.updated_at, () => this.updated_at.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -198,12 +218,15 @@ export namespace paymentcategory.v1 {
                         message.is_needs = reader.readBool();
                         break;
                     case 5:
-                        message.color_code = reader.readString();
+                        message.color_name = reader.readString();
                         break;
                     case 6:
-                        reader.readMessage(message.created_at, () => message.created_at = dependency_1.google.protobuf.Timestamp.deserialize(reader));
+                        message.color_tone = reader.readInt64();
                         break;
                     case 7:
+                        reader.readMessage(message.created_at, () => message.created_at = dependency_1.google.protobuf.Timestamp.deserialize(reader));
+                        break;
+                    case 8:
                         reader.readMessage(message.updated_at, () => message.updated_at = dependency_1.google.protobuf.Timestamp.deserialize(reader));
                         break;
                     default: reader.skipField();

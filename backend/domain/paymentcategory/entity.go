@@ -11,12 +11,13 @@ type PaymentCategory struct {
 	UserId              string
 	PaymentCategoryName string
 	IsNeeds             bool
-	ColorCode           ColorCode
+	ColorName           ColorName
+	ColorTone           ColorTone
 	CreatedAt           time.Time
 	UpdatedAt           time.Time
 }
 
-func NewPaymentCategory(userId, paymentCategoryName string, isNeeds bool, colorCode ColorCode) PaymentCategory {
+func NewPaymentCategory(userId, paymentCategoryName string, isNeeds bool, colorName ColorName, colorTone ColorTone) PaymentCategory {
 	paymentCategoryId := uuid.New()
 	createdAt := time.Now()
 	updatedAt := time.Now()
@@ -26,7 +27,8 @@ func NewPaymentCategory(userId, paymentCategoryName string, isNeeds bool, colorC
 		UserId:              userId,
 		PaymentCategoryName: paymentCategoryName,
 		IsNeeds:             isNeeds,
-		ColorCode:           colorCode,
+		ColorName:           colorName,
+		ColorTone:           colorTone,
 		CreatedAt:           createdAt,
 		UpdatedAt:           updatedAt,
 	}

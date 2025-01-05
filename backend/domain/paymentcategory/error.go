@@ -5,9 +5,11 @@ import (
 )
 
 const (
-	ErrInvalidColorCodeCode = 2001
+	ErrInvalidColorNameCode = 2001
+	ErrInvalidColorToneCode = 2002
 )
 
 var (
-	ErrInvalidColorCode = apperror.NewAppError(ErrInvalidColorCodeCode, "invalid color code")
+	ErrInvalidColorName = apperror.NewAppError(ErrInvalidColorNameCode, "invalid color name")
+	ErrInvalidColorTone = apperror.NewAppError(ErrInvalidColorToneCode, "invalid color tone")
 )

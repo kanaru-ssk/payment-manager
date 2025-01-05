@@ -12,8 +12,10 @@ export default function RootLayout({
 	children: ReactNode;
 }>) {
 	return (
-		<html lang="ja">
-			<body className="font-sans p-5">{children}</body>
+		<html lang="ja" className="dark">
+			<body className="font-sans p-5 dark:bg-neutral-900 dark:text-neutral-200">
+				{children}
+			</body>
 		</html>
 	);
 }

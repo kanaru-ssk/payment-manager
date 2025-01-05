@@ -29,7 +29,7 @@ func (r *PaymentCategoryRepository) FindPaymentCategoriesByUserId(ctx context.Co
 	}
 	for rows.Next() {
 		var pc paymentcategory.PaymentCategory
-		if err := rows.Scan(&pc.PaymentCategoryId, &pc.UserId, &pc.PaymentCategoryName, &pc.IsNeeds, &pc.ColorCode, &pc.CreatedAt, &pc.UpdatedAt); err != nil {
+		if err := rows.Scan(&pc.PaymentCategoryId, &pc.UserId, &pc.PaymentCategoryName, &pc.IsNeeds, &pc.ColorName, &pc.ColorTone, &pc.CreatedAt, &pc.UpdatedAt); err != nil {
 			return nil, err
 		}
 		pcs = append(pcs, pc)

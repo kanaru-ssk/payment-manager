@@ -2,7 +2,7 @@
 -- 支出テーブル
 CREATE TABLE payments (
     payment_id uuid DEFAULT gen_random_uuid () PRIMARY KEY, -- 支出ID
-    user_id uuid NOT NULL, -- ユーザーID
+    user_id varchar(64) NOT NULL, -- ユーザーID
     payment_category_id uuid NOT NULL, -- 支出カテゴリーID
     payment_target varchar(64) NOT NULL, -- 支出対象
     payment_amount integer NOT NULL, -- 支出金額

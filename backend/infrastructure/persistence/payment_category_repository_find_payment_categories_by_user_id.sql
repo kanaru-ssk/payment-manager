@@ -3,7 +3,8 @@ SELECT
     user_id,
     payment_category_name,
     is_needs,
-    color_code,
+    color_name,
+    color_tone,
     created_at,
     updated_at
 FROM

@@ -28,17 +28,18 @@ func (s *PaymentCategoryService) FindPaymentCategoriesByUserId(ctx context.Conte
 	}
 
 	mpcs := make([]*pb.PaymentCategory, len(pcs))
-	for _, pc := range pcs {
+	for i, pc := range pcs {
 		mpc := &pb.PaymentCategory{
 			PaymentCategoryId:   pc.PaymentCategoryId.String(),
 			UserId:              pc.UserId,
 			PaymentCategoryName: pc.PaymentCategoryName,
 			IsNeeds:             pc.IsNeeds,
-			ColorCode:           pc.ColorCode.String(),
+			ColorName:           pc.ColorName.String(),
+			ColorTone:           int64(pc.ColorTone),
 			CreatedAt:           timestamppb.New(pc.CreatedAt),
 			UpdatedAt:           timestamppb.New(pc.UpdatedAt),
 		}
-		mpcs = append(mpcs, mpc)
+		mpcs[i] = mpc
 	}
 
 	return &pb.FindPaymentCategoriesByUserIdResponse{

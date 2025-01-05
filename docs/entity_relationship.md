@@ -19,7 +19,8 @@ erDiagram
         varchar(64) user_id FK "ユーザーID"
         varchar(64)  payment_category_name "支出カテゴリー名"
         boolean is_needs "必要支出フラグ"
-        varchar(7) color_code "カラーコード"
+        color_name_enum color_name "カラー名"
+        smallint color_tone "カラートーン"
         timestamptz created_at "作成日時"
         timestamptz updated_at "更新日時"
     }

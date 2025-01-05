@@ -16,9 +16,10 @@ message PaymentCategory {
   string user_id = 2;
   string payment_category_name = 3;
   bool is_needs = 4;
-  string color_code = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
+  string color_name = 5;
+  int64 color_tone = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
 }
 
 message FindPaymentCategoriesByUserIdRequest {
