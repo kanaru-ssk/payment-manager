@@ -19,6 +19,7 @@
 
 ## 設計書
 
+- [機能一覧](/docs/functions.md)
 - [インフラ構成図](/docs/infrastructure.md)
 - [ER 図](/docs/entity_relationship.md)
 - [テーブル定義](/docs/table.md)
