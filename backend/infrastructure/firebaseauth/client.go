@@ -7,8 +7,8 @@ import (
 	"firebase.google.com/go/v4/auth"
 )
 
-func NewClient(ctx context.Context) (*auth.Client, error) {
-	fa, err := firebase.NewApp(ctx, nil)
+func NewClient(ctx context.Context, projectId string) (*auth.Client, error) {
+	fa, err := firebase.NewApp(ctx, &firebase.Config{ProjectID: projectId})
 	if err != nil {
 		return nil, err
 	}
