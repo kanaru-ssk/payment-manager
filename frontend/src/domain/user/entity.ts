@@ -10,7 +10,7 @@ export type User = {
 };
 
 export const userSchema: z.ZodType<User> = z.object({
-	userId: z.string().uuid(),
+	userId: z.string(),
 	userName: z.string(),
 	email: emailSchema,
 	createdAt: z.date(),
