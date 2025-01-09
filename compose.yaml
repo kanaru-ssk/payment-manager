@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
+    environment:
+      BACKEND_URL: backend:8000
     develop:
       watch:
         - action: sync
@@ -19,6 +21,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
+    environment:
+      PORT: 8000
+      DB_URL: postgres://backend-local:password@db:5432/payment-manager?sslmode=disable
     develop:
       watch:
         - action: rebuild

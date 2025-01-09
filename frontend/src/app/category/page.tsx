@@ -9,7 +9,6 @@ export default async function Page() {
 
 	return (
 		<div>
-			<ColorPallet />
 			<ul>
 				{paymentCategories.map((paymentCategory) => (
 					<li
@@ -29,6 +28,7 @@ export default async function Page() {
 					</li>
 				))}
 			</ul>
+			<ColorPallet />
 		</div>
 	);
 }

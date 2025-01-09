@@ -44,7 +44,7 @@ http://localhost:3000
 ターミナルで以下コマンドでレスポンスが確認できれば起動成功
 
 ```sh
-grpcurl -plaintext -d '{"email": "harry-potter@example.com"}' -proto proto/user/v1/user.proto localhost:8000 user.v1.UserService/FindUserByEmail
+grpcurl -plaintext -d '{"user_id": "user-id-a"}' -proto proto/paymentcategory/v1/paymentcategory.proto localhost:8000 paymentcategory.v1.PaymentCategoryService.FindPaymentCategoriesByUserId
 ```
 
 ### db
