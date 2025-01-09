@@ -25,6 +25,8 @@ provider "google" {
 
 # 有効化するサービスを指定
 resource "google_project_service" "services" {
+  depends_on = [google_project.project]
+
   for_each = toset([
     "iamcredentials.googleapis.com",
     "vpcaccess.googleapis.com",
@@ -43,6 +45,8 @@ resource "google_project_service" "services" {
 
 # GitHub用のService Accountを作成
 module "github_service_account" {
+  depends_on = [google_project.project, google_project_service.services]
+
   source = "../../modules/github_service_account"
 
   project_id     = local.project_id
@@ -51,6 +55,8 @@ module "github_service_account" {
 
 # Artifact Registryのリポジトリを作成
 module "artifact_registry_main" {
+  depends_on = [google_project.project, google_project_service.services, module.github_service_account]
+
   source = "../../modules/artifact_registry"
 
   repository_id = "main"
@@ -61,6 +67,8 @@ module "artifact_registry_main" {
 
 # VPCを作成
 module "vpc" {
+  depends_on = [google_project.project, google_project_service.services]
+
   source = "../../modules/vpc"
 
   region = var.region
@@ -78,6 +86,8 @@ module "vpc" {
 
 # Cloud SQLを作成
 module "db" {
+  depends_on = [google_project.project, google_project_service.services, module.vpc]
+
   source = "../../modules/cloud_sql"
 
   instance_name = "payment-manager"
@@ -90,6 +100,8 @@ module "db" {
 
 # backend用のCloud Run Serviceを作成
 module "backend" {
+  depends_on = [google_project.project, google_project_service.services]
+
   source = "../../modules/cloud_run_service"
 
   name                 = "backend"
@@ -99,6 +111,8 @@ module "backend" {
 
 # frontend用のCloud Run Serviceを作成
 module "frontend" {
+  depends_on = [google_project.project, google_project_service.services]
+
   source = "../../modules/cloud_run_service"
 
   name                 = "frontend"
@@ -108,19 +122,24 @@ module "frontend" {
 
 # Secret Managerにシークレッド作成
 module "frontend_secret" {
+  depends_on = [google_project.project, google_project_service.services, module.frontend]
+
   source = "../../modules/secret_manager_secret"
 
   secret_names = ["BACKEND_URL"]
   accessor     = "serviceAccount:${module.frontend.service_account_email}"
 }
 module "backend-secret" {
-  source = "../../modules/secret_manager_secret"
+  depends_on = [google_project.project, google_project_service.services, module.backend]
+  source     = "../../modules/secret_manager_secret"
 
   secret_names = ["DB_URL"]
   accessor     = "serviceAccount:${module.backend.service_account_email}"
 }
 
 resource "google_identity_platform_config" "default" {
+  depends_on = [google_project.project, google_project_service.services]
+
   sign_in {
     email {
       enabled           = true
