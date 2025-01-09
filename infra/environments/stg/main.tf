@@ -137,22 +137,11 @@ module "backend-secret" {
   accessor     = "serviceAccount:${module.backend.service_account_email}"
 }
 
-resource "google_identity_platform_config" "default" {
+# Identity Platformを作成
+module "identity_platform" {
   depends_on = [google_project.project, google_project_service.services]
 
-  sign_in {
-    email {
-      enabled           = true
-      password_required = false
-    }
-    phone_number {
-      enabled            = false
-      test_phone_numbers = {}
-    }
-  }
-  authorized_domains = [
-    "localhost",
-    "backend-${google_project.project.number}.${var.region}.run.app",
-    "frontend-${google_project.project.number}.${var.region}.run.app",
-  ]
+  source         = "../../modules/identity_platform"
+  region         = var.region
+  project_number = google_project.project.number
 }
