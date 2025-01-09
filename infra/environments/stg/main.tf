@@ -17,8 +17,10 @@ resource "google_project" "project" {
 }
 
 provider "google" {
-  project = local.project_id
-  region  = var.region
+  project               = local.project_id
+  region                = var.region
+  user_project_override = true
+  billing_project       = local.project_id
 }
 
 # 有効化するサービスを指定
@@ -30,7 +32,10 @@ resource "google_project_service" "services" {
     "sqladmin.googleapis.com",
     "artifactregistry.googleapis.com",
     "run.googleapis.com",
-    "secretmanager.googleapis.com"
+    "secretmanager.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "iam.googleapis.com",
+    "identitytoolkit.googleapis.com"
   ])
 
   service = each.value
@@ -113,4 +118,18 @@ module "backend-secret" {
 
   secret_names = ["DB_URL"]
   accessor     = "serviceAccount:${module.backend.service_account_email}"
+}
+
+resource "google_identity_platform_config" "default" {
+  sign_in {
+    email {
+      enabled           = true
+      password_required = false
+    }
+  }
+  authorized_domains = [
+    "localhost",
+    "backend-${google_project.project.number}.${var.region}.run.app",
+    "frontend-${google_project.project.number}.${var.region}.run.app",
+  ]
 }
