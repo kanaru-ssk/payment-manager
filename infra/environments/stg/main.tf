@@ -28,6 +28,8 @@ resource "google_project_service" "services" {
   depends_on = [google_project.project]
 
   for_each = toset([
+    "cloudresourcemanager.googleapis.com",
+    "serviceusage.googleapis.com",
     "iamcredentials.googleapis.com",
     "vpcaccess.googleapis.com",
     "servicenetworking.googleapis.com",
@@ -35,7 +37,6 @@ resource "google_project_service" "services" {
     "artifactregistry.googleapis.com",
     "run.googleapis.com",
     "secretmanager.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
     "iam.googleapis.com",
     "identitytoolkit.googleapis.com"
   ])
