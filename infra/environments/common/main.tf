@@ -17,8 +17,22 @@ resource "google_project" "project" {
 }
 
 provider "google" {
-  project = local.project_id
-  region  = var.region
+  project               = local.project_id
+  region                = var.region
+  user_project_override = true
+  billing_project       = local.project_id
+}
+
+# 有効化するサービスを指定
+resource "google_project_service" "services" {
+  depends_on = [google_project.project]
+
+  for_each = toset([
+    "cloudresourcemanager.googleapis.com",
+    "serviceusage.googleapis.com"
+  ])
+
+  service = each.value
 }
 
 # Terraform Backend用のCloud Storage Bucketを作成
