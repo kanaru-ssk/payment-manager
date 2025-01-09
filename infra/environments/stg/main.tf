@@ -145,6 +145,10 @@ resource "google_identity_platform_config" "default" {
       enabled           = true
       password_required = false
     }
+    phone_number {
+      enabled            = false
+      test_phone_numbers = {}
+    }
   }
   authorized_domains = [
     "localhost",
