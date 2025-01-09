@@ -14,13 +14,13 @@ export default async function Page({
 	if (!user) return <div className="p-5">user not found</div>;
 
 	return (
-		<div>
+		<main>
 			<UserTable user={user} />
 			<UpdateUserForm
 				userId={user.userId}
 				userName={user.userName}
 				email={user.email}
 			/>
-		</div>
+		</main>
 	);
 }

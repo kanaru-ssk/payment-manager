@@ -15,10 +15,10 @@ export default async function Page({
 	if (!user) return <div className="p-5">user not found</div>;
 
 	return (
-		<div>
+		<main>
 			<UserTable user={user} />
 			<Link href={`/${user.userId}/update`}>編集</Link>
 			<DeleteButton userId={user.userId} />
-		</div>
+		</main>
 	);
 }

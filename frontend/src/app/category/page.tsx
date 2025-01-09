@@ -8,7 +8,7 @@ export default async function Page() {
 	const paymentCategories = await findPaymentCategoriesByUserId("user-id-a");
 
 	return (
-		<div>
+		<main>
 			<ul>
 				{paymentCategories.map((paymentCategory) => (
 					<li
@@ -29,6 +29,6 @@ export default async function Page() {
 				))}
 			</ul>
 			<ColorPallet />
-		</div>
+		</main>
 	);
 }
