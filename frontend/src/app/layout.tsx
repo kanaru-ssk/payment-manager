@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="ja" className="dark">
-			<body className="font-sans p-5 dark:bg-neutral-900 dark:text-neutral-200">
+			<body className="font-sans p-5 dark:bg-neutral-900 dark:text-neutral-200 max-w-5xl mx-auto">
 				{children}
 			</body>
 		</html>
