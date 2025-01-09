@@ -9,6 +9,9 @@ export default async function Home() {
 			<Link className="underline" href="/signup">
 				サインアップ
 			</Link>
+			<Link className="underline" href="/category">
+				カテゴリー
+			</Link>
 		</div>
 	);
 }
