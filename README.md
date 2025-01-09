@@ -25,12 +25,34 @@
 - [テーブル定義](/docs/table.md)
 - [ソフトウェアアーキテクチャ](/docs/software_architecture.md)
 
-## ローカル起動方法
+## ローカル環境構築
+
+### 初回のみ
+
+stg 環境の認証機能を使用するため、ADC を設定
+
+```sh
+gcloud auth application-default login --disable-quota-project
+```
+
+Docker Image をビルド
+
+```sh
+docker compose build
+```
+
+### コンテナ起動
 
 ```sh
 docker compose up --watch # 全サービス起動
 ./scripts/dbmate.sh up    # DBスキーマ適用
 ./scripts/dbseed.sh       # テストデータ挿入
+```
+
+### コンテナ削除
+
+```sh
+docker compose down
 ```
 
 ### frontend

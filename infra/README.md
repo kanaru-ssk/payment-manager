@@ -4,6 +4,14 @@
 
 ※ README 内のコマンドはプロジェクトルートで実行してください。
 
+## ローカル環境構築
+
+Google Cloud の認証のため、ADC を設定
+
+```sh
+gcloud auth application-default login --disable-quota-project
+```
+
 ## terraform コマンド
 
 ```sh
