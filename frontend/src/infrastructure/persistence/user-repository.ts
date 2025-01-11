@@ -7,7 +7,7 @@ import type {
 	UpdateUser,
 } from "@/domain/user/repository";
 import { env } from "@/env";
-import { user } from "@/infrastructure/grpc/proto/user/v1/user";
+import { user } from "@/infrastructure/proto/user/v1/user";
 import { toMilliseconds } from "@/lib/timestamp";
 import { credentials } from "@grpc/grpc-js";
 import type { Empty } from "google-protobuf/google/protobuf/empty_pb";

@@ -4,7 +4,7 @@ import {
 } from "@/domain/payment-category";
 import type { FindPaymentCategoriesByUserId } from "@/domain/payment-category/repository";
 import { env } from "@/env";
-import { paymentcategory } from "@/infrastructure/grpc/proto/paymentcategory/v1/paymentcategory";
+import { paymentcategory } from "@/infrastructure/proto/paymentcategory/v1/paymentcategory";
 import { toMilliseconds } from "@/lib/timestamp";
 import { Metadata, credentials } from "@grpc/grpc-js";
 

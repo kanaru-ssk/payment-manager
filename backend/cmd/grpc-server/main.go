@@ -11,8 +11,8 @@ import (
 	"github.com/kanaru-ssk/payment-manager/backend/infrastructure/firebaseauth"
 	"github.com/kanaru-ssk/payment-manager/backend/infrastructure/persistence"
 	"github.com/kanaru-ssk/payment-manager/backend/interface/grpcservice"
-	pbpc "github.com/kanaru-ssk/payment-manager/backend/interface/proto/paymentcategory/v1"
-	pbu "github.com/kanaru-ssk/payment-manager/backend/interface/proto/user/v1"
+	paymentcategoryv1 "github.com/kanaru-ssk/payment-manager/backend/interface/proto/paymentcategory/v1"
+	userv1 "github.com/kanaru-ssk/payment-manager/backend/interface/proto/user/v1"
 	"github.com/kanaru-ssk/payment-manager/backend/usecase"
 	"google.golang.org/grpc"
 )
@@ -41,8 +41,8 @@ func main() {
 
 	// gRPC Service登録 -------------------------------------------
 	s := grpc.NewServer()
-	pbu.RegisterUserServiceServer(s, userService)
-	pbpc.RegisterPaymentCategoryServiceServer(s, paymentCategoryService)
+	userv1.RegisterUserServiceServer(s, userService)
+	paymentcategoryv1.RegisterPaymentCategoryServiceServer(s, paymentCategoryService)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.Port))
 	if err != nil {
