@@ -6,7 +6,7 @@ import type { FindPaymentCategoriesByUserId } from "@/domain/payment-category/re
 import { env } from "@/env";
 import { paymentcategory } from "@/infrastructure/grpc/proto/paymentcategory/v1/paymentcategory";
 import { toMilliseconds } from "@/lib/timestamp";
-import { credentials } from "@grpc/grpc-js";
+import { Metadata, credentials } from "@grpc/grpc-js";
 
 const client = new paymentcategory.v1.PaymentCategoryServiceClient(
 	env.BACKEND_URL,
@@ -22,16 +22,21 @@ export const findPaymentCategoriesByUserId: FindPaymentCategoriesByUserId =
 				new paymentcategory.v1.FindPaymentCategoriesByUserIdRequest({
 					user_id: userId,
 				});
+			const metadata = new Metadata();
 			const response =
 				await new Promise<paymentcategory.v1.FindPaymentCategoriesByUserIdResponse>(
 					(resolve, reject) =>
-						client.FindPaymentCategoriesByUserId(request, (err, res) => {
-							if (err || !res) {
-								reject(new Error("Failed to fetch data from backend server"));
-							} else {
-								resolve(res);
-							}
-						}),
+						client.FindPaymentCategoriesByUserId(
+							request,
+							metadata,
+							(err, res) => {
+								if (err || !res) {
+									reject(new Error("Failed to fetch data from backend server"));
+								} else {
+									resolve(res);
+								}
+							},
+						),
 				);
 
 			const paymentCategories = response.payment_categories.reduce<
