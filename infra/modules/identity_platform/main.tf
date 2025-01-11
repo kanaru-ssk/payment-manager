@@ -15,10 +15,3 @@ resource "google_identity_platform_config" "default" {
     "frontend-${var.project_number}.${var.region}.run.app",
   ]
 }
-
-resource "google_identity_platform_default_supported_idp_config" "default" {
-  enabled       = true
-  idp_id        = "google.com"
-  client_id     = "client-id"
-  client_secret = "secret"
-}
