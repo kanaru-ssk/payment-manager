@@ -4,8 +4,8 @@
 		"ignore": [
 			"node_modules/**/*",
 			".next/**/*",
-			"src/infrastructure/proto/**/**",
-			"src/infrastructure/google/**/**"
+			"src/infrastructure/proto/**/*",
+			"src/infrastructure/google/**/*"
 		]
 	}
 }
