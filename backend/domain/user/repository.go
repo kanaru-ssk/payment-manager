@@ -18,8 +18,9 @@ type UserRepository interface {
 	// CreateUser : 新しいユーザーを作成
 	// userName: ユーザー名
 	// email: メールアドレス
+	// password: パスワード
 	// return: 作成されたユーザー情報
-	CreateUser(ctx context.Context, user string, email Email) (*User, error)
+	CreateUser(ctx context.Context, user string, email Email, password Password) (*User, error)
 
 	// UpdateUser : ユーザー情報を更新
 	// userName: 新しいユーザー名

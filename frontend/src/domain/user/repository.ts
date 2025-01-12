@@ -24,6 +24,7 @@ export type FindUserByEmail = (email: Email) => Promise<User | null>;
 export type CreateUser = (
 	userName: string,
 	email: Email,
+	password: string,
 ) => Promise<User | null>;
 
 /**

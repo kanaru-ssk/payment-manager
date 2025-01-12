@@ -49,10 +49,12 @@ func (r *UserRepository) FindUserByEmail(ctx context.Context, email user.Email) 
 	}, nil
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, userName string, email user.Email) (*user.User, error) {
+func (r *UserRepository) CreateUser(ctx context.Context, userName string, email user.Email, password user.Password) (*user.User, error) {
 	u, err := r.auth.CreateUser(ctx, (&auth.UserToCreate{}).
 		Email(email.String()).
+		Password(password.String()).
 		DisplayName(userName))
+
 	if err != nil {
 		return nil, err
 	}

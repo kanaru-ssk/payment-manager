@@ -5,9 +5,11 @@ import (
 )
 
 const (
-	ErrInvalidEmailCode = 1001
+	ErrInvalidEmailCode    = 1001
+	ErrInvalidPasswordCode = 1002
 )
 
 var (
-	ErrInvalidEmail = apperror.NewAppError(ErrInvalidEmailCode, "invalid email")
+	ErrInvalidEmail    = apperror.NewAppError(ErrInvalidEmailCode, "invalid email")
+	ErrInvalidPassword = apperror.NewAppError(ErrInvalidPasswordCode, "invalid password")
 )

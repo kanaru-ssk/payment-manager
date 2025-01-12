@@ -38,12 +38,16 @@ func (u *UserUseCase) FindUserByEmail(ctx context.Context, email string) (*user.
 	return us, nil
 }
 
-func (u *UserUseCase) CreateUser(ctx context.Context, userName, email string) (*user.User, error) {
+func (u *UserUseCase) CreateUser(ctx context.Context, userName, email, password string) (*user.User, error) {
 	e, err := user.NewEmail(email)
 	if err != nil {
 		return nil, err
 	}
-	us, err := u.userRepository.CreateUser(ctx, userName, e)
+	p, err := user.NewPassword(password)
+	if err != nil {
+		return nil, err
+	}
+	us, err := u.userRepository.CreateUser(ctx, userName, e, p)
 	if err != nil {
 		return nil, err
 	}

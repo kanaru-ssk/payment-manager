@@ -452,6 +452,7 @@ export namespace user.v1 {
         constructor(data?: any[] | {
             user_name?: string;
             email?: string;
+            password?: string;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -461,6 +462,9 @@ export namespace user.v1 {
                 }
                 if ("email" in data && data.email != undefined) {
                     this.email = data.email;
+                }
+                if ("password" in data && data.password != undefined) {
+                    this.password = data.password;
                 }
             }
         }
@@ -476,9 +480,16 @@ export namespace user.v1 {
         set email(value: string) {
             pb_1.Message.setField(this, 2, value);
         }
+        get password() {
+            return pb_1.Message.getFieldWithDefault(this, 3, "") as string;
+        }
+        set password(value: string) {
+            pb_1.Message.setField(this, 3, value);
+        }
         static fromObject(data: {
             user_name?: string;
             email?: string;
+            password?: string;
         }): CreateUserRequest {
             const message = new CreateUserRequest({});
             if (data.user_name != null) {
@@ -487,18 +498,25 @@ export namespace user.v1 {
             if (data.email != null) {
                 message.email = data.email;
             }
+            if (data.password != null) {
+                message.password = data.password;
+            }
             return message;
         }
         toObject() {
             const data: {
                 user_name?: string;
                 email?: string;
+                password?: string;
             } = {};
             if (this.user_name != null) {
                 data.user_name = this.user_name;
             }
             if (this.email != null) {
                 data.email = this.email;
+            }
+            if (this.password != null) {
+                data.password = this.password;
             }
             return data;
         }
@@ -510,6 +528,8 @@ export namespace user.v1 {
                 writer.writeString(1, this.user_name);
             if (this.email.length)
                 writer.writeString(2, this.email);
+            if (this.password.length)
+                writer.writeString(3, this.password);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -524,6 +544,9 @@ export namespace user.v1 {
                         break;
                     case 2:
                         message.email = reader.readString();
+                        break;
+                    case 3:
+                        message.password = reader.readString();
                         break;
                     default: reader.skipField();
                 }

@@ -53,7 +53,7 @@ func (s *UserService) FindUserByEmail(ctx context.Context, req *pb.FindUserByEma
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
-	u, err := s.useCase.CreateUser(ctx, req.UserName, req.Email)
+	u, err := s.useCase.CreateUser(ctx, req.UserName, req.Email, req.Password)
 	if err != nil {
 		return nil, err
 	}

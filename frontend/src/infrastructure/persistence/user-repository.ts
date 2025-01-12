@@ -97,11 +97,12 @@ export const findUserByEmail: FindUserByEmail = async (email) => {
 	}
 };
 
-export const createUser: CreateUser = async (userName, email) => {
+export const createUser: CreateUser = async (userName, email, password) => {
 	try {
 		const request = new user.v1.CreateUserRequest({
 			user_name: userName,
 			email: email,
+			password: password,
 		});
 		const response = await new Promise<user.v1.CreateUserResponse>(
 			(resolve, reject) =>
