@@ -6,42 +6,45 @@ flowchart LR
   gh[GitHub]
   eu@{ shape: circle, label: "End User" }
 
-  d -.-> ccs
-  d -.-> gh
+  d -. terraform apply .-> ccs
+  d -. git push .-> gh
 
-  gh -.-> par
-  gh -.-> sar
+  gh -. docker push .-> par
+  gh -. docker push .-> sar
   eu ==> pcrf
 
   subgraph stg
+    sar[Artifact Registry]
+    scrf[Cloud Run <br> frontend <br> Next.js]
+    sidp[Identity Platform]
+
     subgraph sv[vpc]
-      scrb[Cloud Run <br> backend]
+      scrb[Cloud Run <br> backend <br> Go]
       scs@{ shape: db, label: "Cloud SQL" }
     end
 
-    sar[Artifact Registry]
-    scrf[Cloud Run <br> frontend]
-
-    scrf ==> scrb
-    scrb ==> scs
-    sar -.-> scrf
-    sar -.-> scrb
+    scrf == gRPC ==> scrb
+    scrf == 認証 ==> sidp
+    scrb == SQL ==> scs
+    sar -. docker pull .-> scrf
+    sar -. docker pull .-> scrb
   end
 
   subgraph prod
+    par[Artifact Registry]
+    pcrf[Cloud Run <br> frontend <br> Next.js]
+    pidp[Identity Platform]
+
     subgraph pv[vpc]
-      pcrb[Cloud Run <br> backend]
+      pcrb[Cloud Run <br> backend <br> Go]
       pcs@{ shape: db, label: "Cloud SQL" }
     end
 
-    par[Artifact Registry]
-    pcrf[Cloud Run <br> frontend]
-
-
-    pcrf ==> pcrb
-    pcrb ==> pcs
-    par -.-> pcrf
-    par -.-> pcrb
+    pcrf == gRPC ==> pcrb
+    pcrf == 認証 ==> pidp
+    pcrb == SQL ==> pcs
+    par -. docker pull .-> pcrf
+    par -. docker pull .-> pcrb
   end
 
   subgraph common
@@ -53,9 +56,21 @@ flowchart LR
 
 本番およびステージング用の Google Cloud プロジェクト。
 
-- Backend は Frontend のサービスアカウントでアクセス可能。常に Next.js のサーバーサイドからリクエストする。
-- Cloud SQL は Backend のサービスアカウントでアクセス可能。
-- Cloud SQL と Backend はアクセスを internal に制限する。
+### frontend
+
+- UI を担当する。
+- 外部リクエストは全て Next.js のサーバーサイドで行う。
+
+### backend
+
+- db リクエストを担当する。
+- Frontend のサービスアカウントからのみリクエストを受け付ける。
+- VPC 内からのみリクエストを受け付ける。
+
+### db
+
+- VPC 内からのみリクエストを受け付ける。
+- Backend のサービスアカウントからのみリクエストを受け付ける。
 
 ## common
 
@@ -67,8 +82,7 @@ flowchart LR
 
 コードの管理および CI/CD の実行を行う。
 
-- Publish release で prod デプロイ
-- stg は Deploy Dispatcher でデプロイ
+- Deploy Dispatcher でデプロイ
 - PR 作成・更新で CI 実行
 - develop -> main の流れでマージする。
 
