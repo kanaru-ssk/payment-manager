@@ -15,7 +15,7 @@ import { useFieldErrors } from "@/hooks/use-field-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useActionState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { signupAction } from "./signup-action";
+import { signupAction } from "./actions";
 import { type SignupFormData, signupFormSchema } from "./type";
 
 export function SignupForm() {

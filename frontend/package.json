@@ -10,6 +10,10 @@
 		"biome:fix": "biome check --write"
 	},
 	"dependencies": {
+		"@bufbuild/protobuf": "^2.2.3",
+		"@connectrpc/connect": "^2.0.1",
+		"@connectrpc/connect-node": "^2.0.1",
+		"@googleapis/identitytoolkit": "^11.0.0",
 		"@grpc/grpc-js": "^1.12.5",
 		"@hookform/resolvers": "^3.10.0",
 		"@radix-ui/react-label": "^2.1.1",

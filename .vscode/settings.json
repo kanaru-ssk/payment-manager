@@ -3,5 +3,8 @@
 	"editor.codeActionsOnSave": {
 		"quickfix.biome": "explicit",
 		"source.organizeImports.biome": "explicit"
+	},
+	"protoc": {
+		"options": ["--proto_path=<path of your proto files>"]
 	}
 }

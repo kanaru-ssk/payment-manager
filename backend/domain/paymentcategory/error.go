@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	ErrInvalidColorNameCode = 1101
-	ErrInvalidColorToneCode = 1102
+	ErrInvalidColorNameCode = iota + 1100
+	ErrInvalidColorToneCode
 )
 
 var (

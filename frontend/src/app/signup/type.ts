@@ -1,5 +1,7 @@
-import { type User, emailSchema, passwordSchema } from "@/domain/user";
-import type { FormState } from "@/lib/form-state";
+import { type Auth, emailSchema, passwordSchema } from "@/domain/auth";
+import type { SuccessOrError } from "@/lib/success-or-error";
+import type { typeToFlattenedError } from "zod";
+
 import { z } from "zod";
 export const signupFormSchema = z
 	.object({
@@ -15,4 +17,6 @@ export const signupFormSchema = z
 
 export type SignupFormData = z.infer<typeof signupFormSchema>;
 
-export type SignupFormState = FormState<User, SignupFormData>;
+export type SignupFormState =
+	| SuccessOrError<Auth, typeToFlattenedError<SignupFormData>>
+	| undefined;
