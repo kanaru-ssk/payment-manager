@@ -20,6 +20,8 @@ resource "google_cloud_run_v2_service" "default" {
 
 # 未認証の呼び出しを許可
 resource "google_cloud_run_service_iam_binding" "default" {
+  depends_on = [google_cloud_run_v2_service.default]
+
   location = google_cloud_run_v2_service.default.location
   service  = google_cloud_run_v2_service.default.name
   role     = "roles/run.invoker"
@@ -31,6 +33,8 @@ resource "google_service_account" "cloud_run_sa" {
 }
 
 resource "google_service_account_iam_member" "service_account_act_as" {
+  depends_on = [google_service_account.cloud_run_sa]
+
   service_account_id = google_service_account.cloud_run_sa.id
   member             = "serviceAccount:${var.deploy_account_email}"
   role               = "roles/iam.serviceAccountUser"

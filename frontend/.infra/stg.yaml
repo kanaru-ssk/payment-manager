@@ -19,6 +19,8 @@ spec:
       containers:
         - image: asia-northeast1-docker.pkg.dev/payment-manager-stg/main/frontend:${IMAGE_TAG}
           env:
+            - name: PROJECT_ID
+              value: payment-manager-stg
             - name: BACKEND_URL
               valueFrom:
                 secretKeyRef:

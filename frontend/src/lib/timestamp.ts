@@ -1,9 +1,5 @@
-export function toMilliseconds({
-	seconds,
-	nanos,
-}: {
-	seconds: number;
-	nanos: number;
-}): number {
-	return seconds * 1000 + nanos / 1000000;
+import type { Timestamp } from "@bufbuild/protobuf/wkt";
+
+export function toMilliseconds({ seconds, nanos }: Timestamp): number {
+	return Number(seconds) * 1000 + Number(nanos) / 1000000;
 }

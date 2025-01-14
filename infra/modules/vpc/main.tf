@@ -6,6 +6,8 @@ resource "google_compute_network" "vpc" {
 
 # サブネットを作成
 resource "google_compute_subnetwork" "subnetwork" {
+  depends_on = [google_compute_network.vpc]
+
   for_each                 = var.subnetworks
   name                     = each.value.name
   ip_cidr_range            = each.value.ip_cidr_range
@@ -17,6 +19,8 @@ resource "google_compute_subnetwork" "subnetwork" {
 # see: https://cloud.google.com/sql/docs/postgres/configure-private-ip
 # プライベートIPアドレスを作成
 resource "google_compute_global_address" "private_ip_address" {
+  depends_on = [google_compute_network.vpc]
+
   name          = "private-ip-address"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
@@ -26,6 +30,8 @@ resource "google_compute_global_address" "private_ip_address" {
 
 # Service Networking接続を作成
 resource "google_service_networking_connection" "default" {
+  depends_on = [google_compute_network.vpc, google_compute_global_address.private_ip_address]
+
   network                 = google_compute_network.vpc.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]

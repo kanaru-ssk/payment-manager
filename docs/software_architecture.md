@@ -60,7 +60,7 @@ payment-manager/
     ├── infrastructure/            # インフラストラクチャーレイヤー
     │   ├── cloudsql/
     │   │   └── client.go
-    │   └── presistence/           # domainで定義されたrepositoryなどの実装
+    │   └── persistence/           # domainで定義されたrepositoryなどの実装
     │       ├── user_repository_create_user.sql
     │       └── user_repository.go
     ├── interface/
@@ -121,12 +121,15 @@ payment-manager/
     │   │       ├── index.ts      # バレルファイル
     │   │       ├── repository.ts
     │   │       └── value
-    │   ├── hooks/                 # カスタムフック
-    │   ├── infrastructure/        # インフラストラクチャーレイヤー
+    │   ├── hooks/                # カスタムフック
+    │   ├── infrastructure/       # インフラストラクチャーレイヤー
+    │   │   ├── google/           # protocで自動生成
+    │   │   ├── persistence/      # domainで定義されたrepositoryなどの実装
+    │   │   └── proto/            # protocで自動生成
     │   ├── lib/
-    │   └── env.ts                 # 環境変数の読み取り
-    ├── Dockerfile                 # 本番用
-    ├── Dockerfile.dev             # ローカル開発用
+    │   └── env.ts                # 環境変数の読み取り
+    ├── Dockerfile                # 本番用
+    ├── Dockerfile.dev            # ローカル開発用
     └── package.json
 ```
 
