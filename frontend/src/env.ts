@@ -10,7 +10,7 @@ export const env = createEnv({
 		NODE_ENV: z
 			.enum(["development", "production", "test"])
 			.default("development"),
-		BACKEND_URL: z.string(),
+		BACKEND_URL: z.string().url(),
 	},
 	/*
 	 * Environment variables available on the client (and server).
