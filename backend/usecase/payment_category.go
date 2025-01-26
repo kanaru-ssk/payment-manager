@@ -7,11 +7,11 @@ import (
 )
 
 type PaymentCategoryUseCase struct {
-	paymentCategoryRepository paymentcategory.PaymentCategoryRepository
+	paymentCategoryRepository paymentcategory.Repository
 }
 
 func NewPaymentCategoryUseCase(
-	paymentCategoryRepository paymentcategory.PaymentCategoryRepository,
+	paymentCategoryRepository paymentcategory.Repository,
 ) *PaymentCategoryUseCase {
 	return &PaymentCategoryUseCase{
 		paymentCategoryRepository: paymentCategoryRepository,

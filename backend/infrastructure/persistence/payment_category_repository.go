@@ -14,7 +14,7 @@ type PaymentCategoryRepository struct {
 
 func NewPaymentCategoryRepository(
 	db *sql.DB,
-) paymentcategory.PaymentCategoryRepository {
+) paymentcategory.Repository {
 	return &PaymentCategoryRepository{db: db}
 }
 

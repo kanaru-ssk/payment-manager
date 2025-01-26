@@ -1,4 +1,4 @@
-package cloudsql
+package appcloudsql
 
 import (
 	"database/sql"

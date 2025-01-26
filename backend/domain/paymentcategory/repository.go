@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-type PaymentCategoryRepository interface {
+type Repository interface {
 	// FindPaymentCategoriesByUserId : 指定されたuserIdに基づいて支出カテゴリーを取得
 	// userId: ユーザーID
 	// return: 支出カテゴリーの配列
