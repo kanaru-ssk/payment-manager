@@ -12,3 +12,4 @@ export type GetEmail = () => Promise<Email | undefined>;
 
 export type SetAuth = (auth: Auth) => void;
 export type GetAuth = () => Promise<Auth | undefined>;
+export type DeleteAuth = () => Promise<void>;

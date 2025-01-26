@@ -1,4 +1,5 @@
 import {
+	type DeleteAuth,
 	EMAIL_KEY,
 	type GetAuth,
 	type GetEmail,
@@ -44,4 +45,13 @@ export const getAuth: GetAuth = async () => {
 		return;
 
 	return { userId, userName, email, idToken, refreshToken };
+};
+
+export const deleteAuth: DeleteAuth = async () => {
+	const cookieStore = await cookies();
+	cookieStore.delete(USER_ID_KEY);
+	cookieStore.delete(USER_NAME_KEY);
+	cookieStore.delete(EMAIL_KEY);
+	cookieStore.delete(ID_TOKEN_KEY);
+	cookieStore.delete(REFRESH_TOKEN_KEY);
 };

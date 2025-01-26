@@ -1,9 +1,9 @@
 "use server";
 
-import { signout } from "@/infrastructure/persistence/auth-repository";
+import { deleteAuth } from "@/infrastructure/persistence/auth-store";
 import { redirect } from "next/navigation";
 
 export async function signoutAction() {
-	await signout();
+	await deleteAuth();
 	return redirect("/signin");
 }

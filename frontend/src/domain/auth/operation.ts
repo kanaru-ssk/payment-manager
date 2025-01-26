@@ -21,9 +21,3 @@ export type SignInWithLink = (
 	email: Email,
 	verificationToken: string,
 ) => Promise<SuccessOrError<Auth, Status>>;
-
-/**
- * サインアウト
- * @returns - 認証情報
- */
-export type Signout = () => Promise<void>;
