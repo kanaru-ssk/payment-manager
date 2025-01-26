@@ -25,7 +25,6 @@ export function SigninForm() {
 		resolver: zodResolver(signinFormSchema),
 		defaultValues: {
 			email: "",
-			password: "",
 		},
 	});
 	useFieldErrors(state, form.setError);
@@ -67,21 +66,8 @@ export function SigninForm() {
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="password"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>パスワード</FormLabel>
-							<FormControl>
-								<Input type="password" {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
 				<Button type="submit" className="block mx-auto">
-					サインイン
+					サインインリンク送信
 				</Button>
 			</form>
 		</Form>

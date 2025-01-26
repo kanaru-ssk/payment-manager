@@ -1,7 +1,7 @@
 "use server";
 
-import { signin } from "@/infrastructure/persistence/auth-repository";
-import { redirect } from "next/navigation";
+import { sendSigninLink } from "@/infrastructure/persistence/auth-operation";
+import { setEmail } from "@/infrastructure/persistence/auth-store";
 import { type SigninFormState, signinFormSchema } from "./type";
 
 export async function signinAction(
@@ -10,7 +10,6 @@ export async function signinAction(
 ): Promise<SigninFormState> {
 	const parsed = signinFormSchema.safeParse({
 		email: formData.get("email"),
-		password: formData.get("password"),
 	});
 	if (!parsed.success) {
 		return {
@@ -19,27 +18,23 @@ export async function signinAction(
 		};
 	}
 
-	const response = await signin(parsed.data.email, parsed.data.password);
+	// メールのサインインリンクで戻ってきた時にemailを一緒にbackendに送る必要があるのでcookieに保存
+	setEmail(parsed.data.email);
+
+	// サインインメール送信
+	const response = await sendSigninLink(parsed.data.email);
 
 	if (!response.success) {
-		// apiエラーをフォームエラーにマッピング
-		// TODO: エラーコードを定数で管理する
-		const formErrors: string[] = [];
-		if (response.errors.code === 9000 || response.errors.code === 9001) {
-			formErrors.push(response.errors.message);
-		}
-
 		return {
 			success: false,
 			errors: {
-				formErrors,
+				formErrors: [response.errors.message],
 				fieldErrors: {
 					email: [],
-					password: [],
 				},
 			},
 		};
 	}
 
-	return redirect("/category");
+	return;
 }
