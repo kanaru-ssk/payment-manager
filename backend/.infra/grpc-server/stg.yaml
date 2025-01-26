@@ -21,8 +21,6 @@ spec:
           ports:
             - name: h2c
           env:
-            - name: PROJECT_ID
-              value: payment-manager-stg
             - name: DB_URL
               valueFrom:
                 secretKeyRef:
