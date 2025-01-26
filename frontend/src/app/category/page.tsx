@@ -1,9 +1,15 @@
 import { getColorCode } from "@/domain/payment-category";
+import { getAuth } from "@/infrastructure/persistence/auth-store";
 import { findPaymentCategoriesByUserId } from "@/infrastructure/persistence/payment-category-repository";
+import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { ColorPallet } from "./colors";
 
 export default async function Page() {
+	const auth = await getAuth();
+	if (!auth) {
+		return redirect("/signin");
+	}
 	await connection();
 	const paymentCategories = await findPaymentCategoriesByUserId("user-id-a");
 

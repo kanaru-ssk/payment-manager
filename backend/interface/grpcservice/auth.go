@@ -23,7 +23,7 @@ func NewAuthServiceService(
 	}
 }
 
-func (s *AuthService) SendVerificationEmail(ctx context.Context, req *pb.SendSignInLinkRequest) (*pb.SendSignInLinkResponse, error) {
+func (s *AuthService) SendSignInLink(ctx context.Context, req *pb.SendSignInLinkRequest) (*pb.SendSignInLinkResponse, error) {
 	err := s.useCase.SendSignInLink(ctx, req.Email)
 	if err != nil {
 		var es *status.Status
@@ -40,7 +40,7 @@ func (s *AuthService) SendVerificationEmail(ctx context.Context, req *pb.SendSig
 	return &pb.SendSignInLinkResponse{Status: statusOk}, nil
 }
 
-func (s *AuthService) VerifyEmail(ctx context.Context, req *pb.SignInWithLinkRequest) (*pb.SignInWithLinkResponse, error) {
+func (s *AuthService) SignInWithLink(ctx context.Context, req *pb.SignInWithLinkRequest) (*pb.SignInWithLinkResponse, error) {
 	a, err := s.useCase.SignInWithLink(ctx, req.Email, req.VerificationToken)
 	if err != nil {
 		var es *status.Status

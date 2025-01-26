@@ -6,7 +6,7 @@ export type Auth = {
 	userName: string;
 	email: Email;
 	idToken: string;
-	refreshToken?: string;
+	refreshToken: string;
 };
 
 export const authSchema: z.ZodType<Auth> = z.object({
@@ -14,5 +14,5 @@ export const authSchema: z.ZodType<Auth> = z.object({
 	userName: z.string(),
 	email: emailSchema,
 	idToken: z.string(),
-	refreshToken: z.string().optional(),
+	refreshToken: z.string(),
 });

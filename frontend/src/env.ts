@@ -11,7 +11,6 @@ export const env = createEnv({
 			.enum(["development", "production", "test"])
 			.default("development"),
 		BACKEND_URL: z.string(),
-		PROJECT_ID: z.string(),
 	},
 	/*
 	 * Environment variables available on the client (and server).
@@ -28,6 +27,5 @@ export const env = createEnv({
 	runtimeEnv: {
 		NODE_ENV: process.env.NODE_ENV,
 		BACKEND_URL: process.env.BACKEND_URL,
-		PROJECT_ID: process.env.PROJECT_ID,
 	},
 });
