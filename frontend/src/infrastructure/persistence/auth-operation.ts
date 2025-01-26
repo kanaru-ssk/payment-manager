@@ -1,5 +1,3 @@
-// see: https://nextjs.org/docs/app/building-your-application/authentication
-
 import "server-only";
 import type { SendSigninLink, SignInWithLink } from "@/domain/auth";
 import { STATUS, getStatusByCode } from "@/domain/status";
