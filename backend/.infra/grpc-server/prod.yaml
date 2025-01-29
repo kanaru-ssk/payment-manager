@@ -21,10 +21,12 @@ spec:
           ports:
             - name: h2c
           env:
+            - name: PROJECT_ID
+              value: payment-manager-prod
+            - name: FRONTEND_URL
+              value: https://frontend-759856927896.asia-northeast1.run.app
             - name: DB_URL
               valueFrom:
                 secretKeyRef:
                   name: DB_URL
                   key: latest
-            - name: FRONTEND_URL
-              value: https://frontend-759856927896.asia-northeast1.run.app

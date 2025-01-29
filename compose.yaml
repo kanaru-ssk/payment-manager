@@ -23,8 +23,9 @@ services:
       - 8000:8000
     environment:
       PORT: 8000
-      DB_URL: postgres://backend-local:password@db:5432/payment-manager?sslmode=disable
+      PROJECT_ID: payment-manager-stg
       FRONTEND_URL: http://localhost:3000
+      DB_URL: postgres://backend-local:password@db:5432/payment-manager?sslmode=disable
       GOOGLE_APPLICATION_CREDENTIALS: /application_default_credentials.json
       GOOGLE_CLOUD_QUOTA_PROJECT: payment-manager-stg
     volumes:

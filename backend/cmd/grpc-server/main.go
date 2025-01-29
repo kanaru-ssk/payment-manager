@@ -33,7 +33,7 @@ func main() {
 	if err != nil {
 		slog.ErrorContext(ctx, "main.main appcloudsql.NewClient err:", slog.Any("err", err))
 	}
-	idp, err := appidentityplatform.NewClient(ctx)
+	idp, err := appidentityplatform.NewClient(ctx, config.ProjectId)
 	if err != nil {
 		slog.ErrorContext(ctx, "main.main appidentityplatform.NewClient err:", slog.Any("err", err))
 	}
