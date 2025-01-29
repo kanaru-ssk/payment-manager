@@ -7,8 +7,10 @@ import (
 )
 
 type Config struct {
-	Port  int    `env:"PORT,default=8000"`
-	DbUrl string `env:"DB_URL,default=postgres://backend-local:password@db:5432/payment-manager?sslmode=disable"`
+	Port        int    `env:"PORT,required"`
+	ProjectId   string `env:"PROJECT_ID,required"`
+	FrontendUrl string `env:"FRONTEND_URL,required"`
+	DbUrl       string `env:"DB_URL,required"`
 }
 
 func NewConfig(ctx context.Context) (*Config, error) {

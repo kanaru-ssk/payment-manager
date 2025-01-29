@@ -5,5 +5,5 @@ variable "secret_names" {
 
 variable "accessor" {
   type        = string
-  description = "A list of member to access secret"
+  description = "member to access secret"
 }

@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package auth.v1;
+
+option go_package = "github.com/kanaru-ssk/payment-manager/backend/interface/proto/auth/v1;authv1";
+
+import "google/protobuf/timestamp.proto";
+import "common/status.proto";
+
+service AuthService {
+  rpc SendSignInLink(SendSignInLinkRequest) returns (SendSignInLinkResponse);
+  rpc SignInWithLink(SignInWithLinkRequest) returns (SignInWithLinkResponse);
+  rpc SendChangeEmailLink(SendChangeEmailLinkRequest)
+      returns (SendChangeEmailLinkResponse);
+  rpc ChangeEmailWithLink(ChangeEmailWithLinkRequest)
+      returns (ChangeEmailWithLinkResponse);
+}
+
+message Auth {
+  string user_id = 1;
+  string user_name = 2;
+  string email = 3;
+  string id_token = 4;
+  string refresh_token = 5;
+}
+
+message SendSignInLinkRequest {
+  string email = 1;
+}
+
+message SendSignInLinkResponse {
+  common.Status status = 1;
+}
+
+message SignInWithLinkRequest {
+  string email = 1;
+  string verification_token = 2;
+}
+
+message SignInWithLinkResponse {
+  common.Status status = 1;
+  Auth auth = 2;
+}
+
+message SendChangeEmailLinkRequest {
+  string email = 1;
+  string new_email = 2;
+}
+
+message SendChangeEmailLinkResponse {
+  common.Status status = 1;
+}
+
+message ChangeEmailWithLinkRequest {
+  string email = 1;
+  string verification_token = 2;
+}
+
+message ChangeEmailWithLinkResponse {
+  common.Status status = 1;
+}

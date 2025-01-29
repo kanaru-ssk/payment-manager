@@ -2,9 +2,10 @@ syntax = "proto3";
 
 package paymentcategory.v1;
 
-import "google/protobuf/timestamp.proto";
-
 option go_package = "github.com/kanaru-ssk/payment-manager/backend/interface/proto/paymentcategory/v1;paymentcategoryv1";
+
+import "google/protobuf/timestamp.proto";
+import "common/status.proto";
 
 service PaymentCategoryService {
   rpc FindPaymentCategoriesByUserId(FindPaymentCategoriesByUserIdRequest)
@@ -27,5 +28,6 @@ message FindPaymentCategoriesByUserIdRequest {
 }
 
 message FindPaymentCategoriesByUserIdResponse {
-  repeated PaymentCategory payment_categories = 1;
+  common.Status status = 1;
+  repeated PaymentCategory payment_categories = 2;
 }
