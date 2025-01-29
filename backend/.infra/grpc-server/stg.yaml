@@ -26,3 +26,5 @@ spec:
                 secretKeyRef:
                   name: DB_URL
                   key: latest
+            - name: FRONTEND_URL
+              value: https://frontend-916038765681.asia-northeast1.run.app

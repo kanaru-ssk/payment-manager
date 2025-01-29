@@ -38,7 +38,7 @@ func main() {
 		slog.ErrorContext(ctx, "main.main appidentityplatform.NewClient err:", slog.Any("err", err))
 	}
 	// DI ---------------------------------------------------------
-	authOperation := persistence.NewAuthOperation(idp)
+	authOperation := persistence.NewAuthOperation(idp, config.FrontendUrl)
 	authUseCase := usecase.NewAuthUseCase(authOperation)
 	authService := grpcservice.NewAuthServiceService(authUseCase)
 	paymentCategoryRepository := persistence.NewPaymentCategoryRepository(db)

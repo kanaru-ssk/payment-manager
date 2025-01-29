@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	Port  int    `env:"PORT,required"`
-	DbUrl string `env:"DB_URL,required"`
+	Port        int    `env:"PORT,required"`
+	DbUrl       string `env:"DB_URL,required"`
+	FrontendUrl string `env:"FRONTEND_URL,required"`
 }
 
 func NewConfig(ctx context.Context) (*Config, error) {
