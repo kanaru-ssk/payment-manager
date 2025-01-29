@@ -3,6 +3,7 @@ package grpcservice
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/kanaru-ssk/payment-manager/backend/domain/status"
 	pb "github.com/kanaru-ssk/payment-manager/backend/interface/proto/auth/v1"
@@ -26,6 +27,7 @@ func NewAuthServiceService(
 func (s *AuthService) SendSignInLink(ctx context.Context, req *pb.SendSignInLinkRequest) (*pb.SendSignInLinkResponse, error) {
 	err := s.useCase.SendSignInLink(ctx, req.Email)
 	if err != nil {
+		slog.ErrorContext(ctx, "grpcservice.AuthService.SendSignInLink s.useCase.SendSignInLink err:", slog.Any("err", err))
 		var es *status.Status
 		if errors.As(err, &es) {
 			return &pb.SendSignInLinkResponse{
@@ -43,6 +45,7 @@ func (s *AuthService) SendSignInLink(ctx context.Context, req *pb.SendSignInLink
 func (s *AuthService) SignInWithLink(ctx context.Context, req *pb.SignInWithLinkRequest) (*pb.SignInWithLinkResponse, error) {
 	a, err := s.useCase.SignInWithLink(ctx, req.Email, req.VerificationToken)
 	if err != nil {
+		slog.ErrorContext(ctx, "grpcservice.AuthService.SignInWithLink s.useCase.SignInWithLink err:", slog.Any("err", err))
 		var es *status.Status
 		if errors.As(err, &es) {
 			return &pb.SignInWithLinkResponse{Status: &common.Status{

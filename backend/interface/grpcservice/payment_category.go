@@ -3,6 +3,7 @@ package grpcservice
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/kanaru-ssk/payment-manager/backend/domain/status"
 	"github.com/kanaru-ssk/payment-manager/backend/interface/proto/common"
@@ -27,6 +28,7 @@ func NewPaymentCategoryService(
 func (s *PaymentCategoryService) FindPaymentCategoriesByUserId(ctx context.Context, req *pb.FindPaymentCategoriesByUserIdRequest) (*pb.FindPaymentCategoriesByUserIdResponse, error) {
 	pcs, err := s.useCase.FindPaymentCategoriesByUserId(ctx, req.UserId)
 	if err != nil {
+		slog.ErrorContext(ctx, "grpcservice.PaymentCategoryService.FindPaymentCategoriesByUserId s.useCase.FindPaymentCategoriesByUserId err:", slog.Any("err", err))
 		var es *status.Status
 		if errors.As(err, &es) {
 			return &pb.FindPaymentCategoriesByUserIdResponse{
