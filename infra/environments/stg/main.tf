@@ -145,4 +145,6 @@ module "identity_platform" {
   source         = "../../modules/identity_platform"
   region         = var.region
   project_number = google_project.project.number
+  project_id     = local.project_id
+  admin_emails   = ["serviceAccount:${module.backend.service_account_email}"]
 }

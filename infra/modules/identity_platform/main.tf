@@ -15,3 +15,11 @@ resource "google_identity_platform_config" "default" {
     "frontend-${var.project_number}.${var.region}.run.app",
   ]
 }
+
+resource "google_project_iam_member" "project" {
+  for_each = toset(var.admin_emails)
+
+  project = var.project_id
+  role    = "roles/identityplatform.admin"
+  member  = each.value
+}
